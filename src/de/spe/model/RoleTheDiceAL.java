@@ -30,7 +30,7 @@ public class RoleTheDiceAL extends Observable implements ActionListener{
         lastRoll = -1;
     }
 
-    public RoleTheDiceAL getInsance()
+    public static RoleTheDiceAL getInsance()
     {
         return INSTANCE;
     }
