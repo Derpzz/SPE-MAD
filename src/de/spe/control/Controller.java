@@ -1,5 +1,6 @@
 package de.spe.control;
 
-public class Controller {
+import de.spe.model.Game;
 
+public class Controller {
 }

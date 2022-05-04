@@ -1,9 +1,12 @@
 package de.spe.main;
 
+import de.spe.model.Game;
+
 public class MADMain {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+
+		Game game = new Game("Isaa","","Jannik","Lucas");
 
 	}
 
