@@ -1,3 +1,4 @@
+package guiExample;
 import javax.swing.JPanel;
 import java.awt.Color;
 
