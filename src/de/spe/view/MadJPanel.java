@@ -1,4 +1,4 @@
-package guiExample;
+package de.spe.view;
 import javax.swing.JPanel;
 import java.awt.Color;
 

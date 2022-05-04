@@ -1,4 +1,4 @@
-package guiExample;
+package de.spe.view;
 import javax.swing.*;
 import java.awt.*;
 
@@ -36,16 +36,16 @@ public class MainFrame extends JFrame {
         homeR = new JPanel[4];
         
 
-        for(Color color : colors)
-        {
-            for(int i = 2; i > 0; i--)
-            {
-                for(int j = 4; j > 0; j--)
-                {
-                    
-                }
-            }
-        }
+//        for(Color color : colors)
+//        {
+//            for(int i = 2; i > 0; i--)
+//            {
+//                for(int j = 4; j > 0; j--)
+//                {
+//                    
+//                }
+//            }
+//        }
         MadJPanel invisble =  new MadJPanel(Color.black);
 
         JPanel[] playField = new JPanel[60];
