@@ -1,5 +1,6 @@
 package de.spe.model;
 
+// TODO PLS change imports for new Observer
 import java.util.Observer;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,15 +12,15 @@ import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class RoleTheDiceAL extends Observable implements ActionListener{
+public class DiceAL extends Observable implements ActionListener{
 
     private List<Observer> observers = new ArrayList<Observer>();
     
-    private static final RoleTheDiceAL INSTANCE = new RoleTheDiceAL();
+    private static final DiceAL INSTANCE = new DiceAL();
     private final Random rand;
     private int lastRoll;
 
-    private RoleTheDiceAL() 
+    private DiceAL() 
     {
         rand = new Random();
         reset();
@@ -30,7 +31,7 @@ public class RoleTheDiceAL extends Observable implements ActionListener{
         lastRoll = -1;
     }
 
-    public static RoleTheDiceAL getInsance()
+    public static DiceAL getInsance()
     {
         return INSTANCE;
     }
@@ -45,7 +46,7 @@ public class RoleTheDiceAL extends Observable implements ActionListener{
         return lastRoll;
     }
 
-    public void deactivateDice(Dice butt)
+    public void deactivateDice(Dice button)
     {
         butt.setEnabled(false);
     }
@@ -69,17 +70,13 @@ public class RoleTheDiceAL extends Observable implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        if(e.getSource() instanceof Dice butt)
+        if(e.getSource() instanceof Dice button)
         {
             //PLS add animation
             butt.setText(Integer.toString(rollTheDice()));
             deactivateDice(butt);
 
-        } else if(e.getSource() instanceof JButton)
-        {
-            System.out.println("HEY, DU! Bitte eine eigene Button Klasse namens Dice anlegen");
-        }
-        
+        } 
     }
     
 }
