@@ -31,9 +31,9 @@ public class Controller {
      * @param bName name of blue player
      * @param rName name of red player
      */
-    public void newGame(String yName, String gName, String bName, String rName)
+    public void newGame(String yName, boolean yBot, String gName, boolean gBot, String bName, boolean bBot, String rName, boolean rBot)
     {
-        this.currentGame = new Game(yName, gName, bName, rName);
+        this.currentGame = new Game(yName, yBot, gName, gBot, bName, bBot, rName, rBot);
     }
 
     /**
