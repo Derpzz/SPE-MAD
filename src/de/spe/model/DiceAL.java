@@ -2,9 +2,9 @@ package de.spe.model;
 
 // TODO PLS change imports for new Observer
 import java.util.Observer;
+import java.util.Observable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -26,16 +26,28 @@ public class DiceAL extends Observable implements ActionListener{
         reset();
     }
 
+    /**
+     * Resets the last rolled number to become unvaild.
+     * In this case -1.
+     */
     private void reset()
     {
         lastRoll = -1;
     }
 
+    /**
+     * Gets singleton instance of the dice.
+     * @return dice object
+     */
     public static DiceAL getInsance()
     {
         return INSTANCE;
     }
 
+    /**
+     * Rolls the dice
+     * @return number between 1 and 6 (inclusive)
+     */
     public int rollTheDice()
     {
         return lastRoll = rand.nextInt(6) + 1; 
@@ -46,9 +58,13 @@ public class DiceAL extends Observable implements ActionListener{
         return lastRoll;
     }
 
+    /**
+     * Disables the dice button, so that it becomes unclickable.
+     * @param button button that is to be disabled.
+     */
     public void deactivateDice(Dice button)
     {
-        butt.setEnabled(false);
+        button.setEnabled(false);
     }
 
     @Override
@@ -73,8 +89,8 @@ public class DiceAL extends Observable implements ActionListener{
         if(e.getSource() instanceof Dice button)
         {
             //PLS add animation
-            butt.setText(Integer.toString(rollTheDice()));
-            deactivateDice(butt);
+            button.setText(Integer.toString(rollTheDice()));
+            deactivateDice(button);
 
         } 
     }
