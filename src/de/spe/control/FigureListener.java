@@ -7,7 +7,7 @@ public class FigureListener implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Controller.currentGame.checkMove;
+		Controller.currentGame.moveFigure(e);
 		
 	}
 

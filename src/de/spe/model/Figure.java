@@ -4,19 +4,45 @@ import java.awt.Color;
 
 import javax.swing.JButton;
 
+import de.spe.control.FigureListener;
+
+@SuppressWarnings("serial")
 public class Figure extends JButton{
+	
 /*****Attribute*****/
-	int currentPosition;
-	Color color;
+	private int position;
+	private Color color;
+	private Area area;
+
 	
 /*****Constructor*****/
-	public Figure(Color color, int currentPosition) {
+	public Figure(Color color, int position) {
 		super();
 		this.color = color;
-		this.currentPosition = currentPosition;
+		this.position = position;
+		this.area = Area.Base;
 		
-		this.setBackground(color);
+		this.addActionListener(new FigureListener());
 		this.setBorderPainted(true);
-		this.setEnabled(false);
 	}
+	
+/*****GetterAndSetter*****/
+	public Color getColor() {
+		return color;
+	}
+	public int getPosition() {
+		return position;
+	}
+	public void setPosition(int currentPosition) {
+		this.position = currentPosition;
+	}
+
+	public Area getArea() {
+		return area;
+	}
+	public void setArea(Area area) {
+		this.area = area;
+	}
+	
+	
 }

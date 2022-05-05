@@ -6,8 +6,9 @@ public class MADMain {
 
 	public static void main(String[] args) {
 
-		Game game = new Game("Isaa","","Jannik","Lucas");
-
+		new Game("Isaa",false,"",false,"Jannik",false,"Lucas",false);
+		
+		System.out.println("ENDE");
 	}
 
 }
