@@ -2,15 +2,11 @@ package de.spe.model;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
-import javax.swing.JButton;
-
-import de.spe.control.DiceAL;
 import de.spe.control.Observable;
 import de.spe.control.Observer;
-import de.spe.view.Figure;
+import de.spe.control.GUINumber;
 
 public class Game implements Observable, Observer{		int test =0;
 														Random random = new Random();
@@ -34,25 +30,7 @@ public class Game implements Observable, Observer{		int test =0;
 	
 	private int round;
 	private ArrayList<Integer> dices = new ArrayList<Integer>();
-/*****Finals*****/
-	private final int RESET = 999; ///Würfel wieder aktivieren osnt nichts
-	private final int yellowNumber = 0;
-	private final int yellowStartPoint = 0;
-	private final int yellowEndPoint = 39;
-	private final int greenNumber = 10;
-	private final int greenStartPoint = 10;
-	private final int greenEndPoint = 9;
-	private final int blueNumber = 20;
-	private final int blueStartPoint = 20;
-	private final int blueEndPoint = 19;
-	private final int redNumber = 30;
-	private final int redStartPoint = 30;
-	private final int redEndPoint = 29;
-	private final int fieldNumber = 100;
-	private final int baseNumber = 200;
-	private final int homeNumber = 300;
-	
-	private final int WÜRFEL = 3;
+
 /*****GetterAndSetter*****/
 //	public ArrayList<Figure> getFieldFigurePosition() {
 //		return fieldFigurePosition;
@@ -101,6 +79,7 @@ public class Game implements Observable, Observer{		int test =0;
 			System.out.println("Roter Spieler erstellt");
 		}
 		round = 0;
+		//Figuren platzieren
 		currentPlayer = players.get(0);
 		this.update(null);///Würfel simulieren
 	}
@@ -144,7 +123,7 @@ public class Game implements Observable, Observer{		int test =0;
 		
 	///nothing can move
 		if(blockedFigure.size()==4) {
-			moveTo = RESET;
+			moveTo = GUINumber.RESET.getNumber();
 		}
 	///Figure cant move
 		else if(blockedFigure.contains(currentFigure)) return;
@@ -154,27 +133,27 @@ public class Game implements Observable, Observer{		int test =0;
 		else if(fieldFigurePosition.contains(currentFigure)) { 
 		//Figure geht ins Haus
 			if(currentPlayer.getColor()==Color.yellow) {
-				if(yellowEndPoint - WÜRFEL < fieldFigurePosition.indexOf(currentFigure)) {//würde ins Ziel gehen
-					if(fieldFigurePosition.indexOf(currentFigure) + WÜRFEL > yellowEndPoint + 4) {blockedFigure.add(currentFigure); return;}// cant go to far
+				if(currentPlayer.getEndField() - GUINumber.WÜRFEL.getNumber() < fieldFigurePosition.indexOf(currentFigure)) {//würde ins Ziel gehen
+					if(fieldFigurePosition.indexOf(currentFigure) + GUINumber.WÜRFEL.getNumber() > currentPlayer.getEndField() + 4) {blockedFigure.add(currentFigure); return;}// cant go to far
 					
-					int lastStepsOnField = yellowEndPoint - fieldFigurePosition.indexOf(currentFigure);
-					if (currentPlayer.getInHome().get(WÜRFEL - lastStepsOnField) != null) {blockedFigure.add(currentFigure); return;}; // cant go to own field
+					int lastStepsOnField = currentPlayer.getEndField() - fieldFigurePosition.indexOf(currentFigure);
+					if (currentPlayer.getInHome().get(GUINumber.WÜRFEL.getNumber() - lastStepsOnField) != null) {blockedFigure.add(currentFigure); return;}; // cant go to own field
 					
-					moveTo = WÜRFEL - lastStepsOnField -1;
+					moveTo = GUINumber.WÜRFEL.getNumber() - lastStepsOnField -1;
 					
 					//speichern das Figure gerückt ist
 					fieldFigurePosition.remove(currentFigure);
 					currentPlayer.getInHome().add(moveTo, currentFigure);
 					
 					//Befehl für GUI
-					moveTo =+ yellowNumber;
-					moveTo =+ homeNumber;
+					moveTo =+ currentPlayer.getColorNumber();
+					moveTo =+ GUINumber.homeNumber.getNumber();
 				}
 			}
 			
 			
 			
-			moveTo = fieldFigurePosition.indexOf(currentFigure) + WÜRFEL; //gewürfelte Nummer
+			moveTo = fieldFigurePosition.indexOf(currentFigure) + GUINumber.WÜRFEL.getNumber(); //gewürfelte Nummer
 			
 			///Figure befindet sich auf dem zu ziehenden Feld
 			if(fieldFigurePosition.get(moveTo) != null){
@@ -186,16 +165,16 @@ public class Game implements Observable, Observer{		int test =0;
 			fieldFigurePosition.add(moveTo, currentFigure);
 			
 			//Befehl für GUI
-			moveTo =+ fieldNumber;
+			moveTo =+ GUINumber.fieldNumber.getNumber();
 			
 			this.currentFigure=currentFigure;
 		} 
 		
 	/// Figure steht im Haus/Ziel		
 		else if (currentPlayer.getInHome().contains(currentFigure)) { 
-			if(currentPlayer.getInHome().indexOf(currentFigure) + WÜRFEL > 3) {blockedFigure.add(currentFigure); return;};//cant go to far
+			if(currentPlayer.getInHome().indexOf(currentFigure) + GUINumber.WÜRFEL.getNumber() > 3) {blockedFigure.add(currentFigure); return;};//cant go to far
 			
-			moveTo = currentPlayer.getInHome().indexOf(currentFigure) + WÜRFEL;
+			moveTo = currentPlayer.getInHome().indexOf(currentFigure) + GUINumber.WÜRFEL.getNumber();
 			if(currentPlayer.getInHome().get(moveTo) != null) {blockedFigure.add(currentFigure); return;};//cant go to own field
 			
 			//speichern das Figure gerückt ist
@@ -203,114 +182,91 @@ public class Game implements Observable, Observer{		int test =0;
 			currentPlayer.getInHome().add(moveTo, currentFigure);
 			
 			//Befehl für GUI
-			if(currentPlayer.getColor()==Color.yellow) moveTo =+ yellowNumber;
-			if(currentPlayer.getColor()==Color.green) moveTo =+ greenNumber;
-			if(currentPlayer.getColor()==Color.blue) moveTo =+ blueNumber;
-			if(currentPlayer.getColor()==Color.red) moveTo =+ redNumber;
-			moveTo =+ homeNumber;
+			moveTo =+ currentPlayer.getColorNumber();
+			moveTo =+ GUINumber.homeNumber.getNumber();
 			
 			this.currentFigure=currentFigure;
 		} 
 		
 	/// Alle Figur  sind in der Base				
 		else if(currentPlayer.getInBase().size()==4){
-			if(WÜRFEL != 6) {//gewürfelte Nummer ist nicht 6
-				moveTo = RESET;
+			if(GUINumber.WÜRFEL.getNumber() != 6) {//gewürfelte Nummer ist nicht 6
+				moveTo = GUINumber.RESET.getNumber();
 				notifyObservers();
 				return;
 			}
-/*************VVVVV gucken ob da keiner STEHT VVVVVV*******/			
-			if(currentFigure.getBackground()==Color.yellow) {
-				moveTo=yellowStartPoint;
-			} else if(currentFigure.getBackground()==Color.green) {
-				moveTo=greenStartPoint;
-			} else if(currentFigure.getBackground()==Color.blue) {
-				moveTo=blueStartPoint;
-			} else if(currentFigure.getBackground()==Color.red) {
-				moveTo=redStartPoint;
-			} 
+/*************VVVVV gucken ob da keiner STEHT VVVVVV*******/	
+			moveTo=currentPlayer.getStartField();
+			
 			//speichern das Figure gerückt ist
 			currentPlayer.getInBase().remove(currentFigure);
 			fieldFigurePosition.add(moveTo, currentFigure);
 			
 			//Befehl für GUI
-			moveTo =+ fieldNumber;
+			moveTo =+ GUINumber.fieldNumber.getNumber();
 		}
 		
 	/// Figur ist in der Base
 		else if(currentPlayer.getInBase().contains(currentFigure)) {
-			if(WÜRFEL != 6) {
+			if(GUINumber.WÜRFEL.getNumber() != 6) {
 				blockedFigure.add(currentFigure);
 				return;
 			}
-			if(currentFigure.getBackground()==Color.yellow) {
-				moveTo=yellowStartPoint;
-			} else if(currentFigure.getBackground()==Color.green) {
-				moveTo=greenStartPoint;
-			} else if(currentFigure.getBackground()==Color.blue) {
-				moveTo=blueStartPoint;
-			} else if(currentFigure.getBackground()==Color.red) {
-				moveTo=redStartPoint;
-			} 
+			moveTo=currentPlayer.getStartField();
+			
 			//speichern das Figure gerückt ist
 			currentPlayer.getInBase().remove(currentFigure);
 			fieldFigurePosition.add(moveTo, currentFigure);
 			
 			//Befehl für GUI
-			moveTo =+ fieldNumber;
+			moveTo =+ GUINumber.fieldNumber.getNumber();
 		}
 		
 		else {
-			if(WÜRFEL != 6) {//Würfel ist nicht 6
+			if(GUINumber.WÜRFEL.getNumber() != 6) {//Würfel ist nicht 6
 				blockedFigure.add(currentFigure);
 				return;
 			}
-			if(currentFigure.getBackground()==Color.yellow) {
-				moveTo=yellowStartPoint;
-			} else if(currentFigure.getBackground()==Color.green) {
-				moveTo=greenStartPoint;
-			} else if(currentFigure.getBackground()==Color.blue) {
-				moveTo=blueStartPoint;
-			} else if(currentFigure.getBackground()==Color.red) {
-				moveTo=redStartPoint;
-			} 
+			moveTo=currentPlayer.getStartField();
+			
 			//speichern das Figure gerückt ist
 			fieldFigurePosition.add(moveTo, currentFigure);
 			
 			//Befehl für GUI
-			moveTo =+ fieldNumber;
+			moveTo =+  GUINumber.fieldNumber.getNumber();
 		}
 		
 		//NextPlayerOrAgain
-		if(WÜRFEL != 6) nextPlayer();
+		if(GUINumber.WÜRFEL.getNumber() != 6) nextPlayer();
 		
 		blockedFigure.clear();
 		notifyObservers();
 	}
 	
 	private void kickFigure(int moveTo) {
+		kickTo = 0;
 		toKickFigure = fieldFigurePosition.get(moveTo);
 		if(toKickFigure.getBackground()==yellowPlayer.getColor()) {
 			yellowPlayer.addInBase(toKickFigure);
 			kickTo = yellowPlayer.getInBase().indexOf(toKickFigure);
-			kickTo =+ yellowNumber;
+			kickTo =+ yellowPlayer.getColorNumber();
 		}
 		else if(toKickFigure.getBackground()== greenPlayer.getColor()) {
 			greenPlayer.addInBase(toKickFigure);
 			kickTo = greenPlayer.getInBase().indexOf(toKickFigure);
-			kickTo =+ greenNumber;
+			kickTo =+ greenPlayer.getColorNumber();
 		}
 		else if(toKickFigure.getBackground()== bluePlayer.getColor()) {
 			bluePlayer.addInBase(toKickFigure);
 			kickTo = bluePlayer.getInBase().indexOf(toKickFigure);
-			kickTo =+ blueNumber;
+			kickTo =+ bluePlayer.getColorNumber();
 		}
 		else if(toKickFigure.getBackground()== redPlayer.getColor()) {
 			redPlayer.addInBase(toKickFigure);
 			kickTo = redPlayer.getInBase().indexOf(toKickFigure);
-			kickTo =+ redNumber;
+			kickTo =+ redPlayer.getColorNumber();
 		}
-		kickTo =+ baseNumber;
+		kickTo =+ GUINumber.baseNumber.getNumber();
 		
 	}
 
@@ -328,7 +284,7 @@ public class Game implements Observable, Observer{		int test =0;
 //////////
 		//Erste Runde
 		if(round == 0) {
-			moveTo = RESET;
+			moveTo = GUINumber.RESET.getNumber();
 			if(dices.size() == players.size()) {
 				System.out.println(players);
 				System.out.println("Spieler sortieren");
@@ -341,7 +297,7 @@ public class Game implements Observable, Observer{		int test =0;
 		} 
 		//Andere Runden
 		else {
-			
+			//checken, was moven kann
 		}
 		
 	}
