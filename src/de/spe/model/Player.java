@@ -13,6 +13,10 @@ public class Player {
 	private ArrayList<Figure> inBase;
 	private ArrayList<Figure> inHome;
 	
+	private int colorNumber;
+	private int startField;
+	private int endField;
+	
 /*****GetterAndSetter*****/
 	public ArrayList<Figure> getInBase() {
 		return inBase;
@@ -23,11 +27,8 @@ public class Player {
 	public void addInBase(Figure homeFigure) {
 		this.inBase.add(homeFigure);
 	}
-	public ArrayList getInHome() {
+	public ArrayList<Figure> getInHome() {
 		return inHome;
-	}
-	public void setInHome(ArrayList inHome) {
-		this.inHome = inHome;
 	}
 	public String getName() {
 		return name;

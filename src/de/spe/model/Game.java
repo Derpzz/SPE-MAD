@@ -28,12 +28,31 @@ public class Game implements Observable, Observer{		int test =0;
 	private int moveTo;
 	private int kickTo;
 	private Figure toKickFigure;
+	private ArrayList<Figure> blockedFigure = new ArrayList<Figure>();
 	
 	private ArrayList<Observer> observers = new ArrayList<Observer>();
 	
 	private int round;
 	private ArrayList<Integer> dices = new ArrayList<Integer>();
+/*****Finals*****/
+	private final int RESET = 999; ///Würfel wieder aktivieren osnt nichts
+	private final int yellowNumber = 0;
+	private final int yellowStartPoint = 0;
+	private final int yellowEndPoint = 39;
+	private final int greenNumber = 10;
+	private final int greenStartPoint = 10;
+	private final int greenEndPoint = 9;
+	private final int blueNumber = 20;
+	private final int blueStartPoint = 20;
+	private final int blueEndPoint = 19;
+	private final int redNumber = 30;
+	private final int redStartPoint = 30;
+	private final int redEndPoint = 29;
+	private final int fieldNumber = 100;
+	private final int baseNumber = 200;
+	private final int homeNumber = 300;
 	
+	private final int WÜRFEL = 3;
 /*****GetterAndSetter*****/
 //	public ArrayList<Figure> getFieldFigurePosition() {
 //		return fieldFigurePosition;
@@ -117,31 +136,155 @@ public class Game implements Observable, Observer{		int test =0;
 		this.update(null); ///test
 	}
 	
-	//checkMove
+///checkMove
 	public void checkMove(Figure currentFigure) { /// JButton --> Figure
+		if(round == 0) return;
 		if(currentPlayer.getColor() != currentFigure.getBackground()) return;
 		moveTo=0;
 		
-		if(fieldFigurePosition.contains(currentFigure)) { /// Figure steht auf dem Spielfeld
-			moveTo = fieldFigurePosition.indexOf(currentFigure) + (random.nextInt(6)+1); //gewürfelte Nummer
-			if(fieldFigurePosition.get(moveTo)!=null){///Figure befindet sich auf dem zu ziehenden Feld
-				if(fieldFigurePosition.get(moveTo).getBackground()==currentPlayer.getColor()) return;
-				else kickFigure(moveTo); //zu kickende Figur
+	///nothing can move
+		if(blockedFigure.size()==4) {
+			moveTo = RESET;
+		}
+	///Figure cant move
+		else if(blockedFigure.contains(currentFigure)) return;
+		
+		
+	/// Figure steht auf dem Spielfeld		
+		else if(fieldFigurePosition.contains(currentFigure)) { 
+		//Figure geht ins Haus
+			if(currentPlayer.getColor()==Color.yellow) {
+				if(yellowEndPoint - WÜRFEL < fieldFigurePosition.indexOf(currentFigure)) {//würde ins Ziel gehen
+					if(fieldFigurePosition.indexOf(currentFigure) + WÜRFEL > yellowEndPoint + 4) {blockedFigure.add(currentFigure); return;}// cant go to far
+					
+					int lastStepsOnField = yellowEndPoint - fieldFigurePosition.indexOf(currentFigure);
+					if (currentPlayer.getInHome().get(WÜRFEL - lastStepsOnField) != null) {blockedFigure.add(currentFigure); return;}; // cant go to own field
+					
+					moveTo = WÜRFEL - lastStepsOnField -1;
+					
+					//speichern das Figure gerückt ist
+					fieldFigurePosition.remove(currentFigure);
+					currentPlayer.getInHome().add(moveTo, currentFigure);
+					
+					//Befehl für GUI
+					moveTo =+ yellowNumber;
+					moveTo =+ homeNumber;
+				}
 			}
-			fieldFigurePosition.remove(fieldFigurePosition.indexOf(currentFigure));
+			
+			
+			
+			moveTo = fieldFigurePosition.indexOf(currentFigure) + WÜRFEL; //gewürfelte Nummer
+			
+			///Figure befindet sich auf dem zu ziehenden Feld
+			if(fieldFigurePosition.get(moveTo) != null){
+				if(fieldFigurePosition.get(moveTo).getBackground()==currentPlayer.getColor()) {blockedFigure.add(currentFigure); return;};//cant go to own field
+				kickFigure(moveTo); //zu kickende Figur
+			}
+			//speichern das Figure gerückt ist
+			fieldFigurePosition.remove(currentFigure);
 			fieldFigurePosition.add(moveTo, currentFigure);
-			moveTo=+100;//speichern das Figur gerückt ist
+			
+			//Befehl für GUI
+			moveTo =+ fieldNumber;
+			
 			this.currentFigure=currentFigure;
 		} 
 		
-		else if (currentPlayer.getInHome().contains(currentFigure)) { /// Figure steht im Haus/Ziel
+	/// Figure steht im Haus/Ziel		
+		else if (currentPlayer.getInHome().contains(currentFigure)) { 
+			if(currentPlayer.getInHome().indexOf(currentFigure) + WÜRFEL > 3) {blockedFigure.add(currentFigure); return;};//cant go to far
 			
+			moveTo = currentPlayer.getInHome().indexOf(currentFigure) + WÜRFEL;
+			if(currentPlayer.getInHome().get(moveTo) != null) {blockedFigure.add(currentFigure); return;};//cant go to own field
+			
+			//speichern das Figure gerückt ist
+			currentPlayer.getInHome().remove(currentFigure);
+			currentPlayer.getInHome().add(moveTo, currentFigure);
+			
+			//Befehl für GUI
+			if(currentPlayer.getColor()==Color.yellow) moveTo =+ yellowNumber;
+			if(currentPlayer.getColor()==Color.green) moveTo =+ greenNumber;
+			if(currentPlayer.getColor()==Color.blue) moveTo =+ blueNumber;
+			if(currentPlayer.getColor()==Color.red) moveTo =+ redNumber;
+			moveTo =+ homeNumber;
+			
+			this.currentFigure=currentFigure;
 		} 
 		
-		else if(currentPlayer.getInBase().size()>0){ /// Figur ist in der Base
+	/// Alle Figur  sind in der Base				
+		else if(currentPlayer.getInBase().size()==4){
+			if(WÜRFEL != 6) {//gewürfelte Nummer ist nicht 6
+				moveTo = RESET;
+				notifyObservers();
+				return;
+			}
+/*************VVVVV gucken ob da keiner STEHT VVVVVV*******/			
+			if(currentFigure.getBackground()==Color.yellow) {
+				moveTo=yellowStartPoint;
+			} else if(currentFigure.getBackground()==Color.green) {
+				moveTo=greenStartPoint;
+			} else if(currentFigure.getBackground()==Color.blue) {
+				moveTo=blueStartPoint;
+			} else if(currentFigure.getBackground()==Color.red) {
+				moveTo=redStartPoint;
+			} 
+			//speichern das Figure gerückt ist
+			currentPlayer.getInBase().remove(currentFigure);
+			fieldFigurePosition.add(moveTo, currentFigure);
 			
+			//Befehl für GUI
+			moveTo =+ fieldNumber;
 		}
 		
+	/// Figur ist in der Base
+		else if(currentPlayer.getInBase().contains(currentFigure)) {
+			if(WÜRFEL != 6) {
+				blockedFigure.add(currentFigure);
+				return;
+			}
+			if(currentFigure.getBackground()==Color.yellow) {
+				moveTo=yellowStartPoint;
+			} else if(currentFigure.getBackground()==Color.green) {
+				moveTo=greenStartPoint;
+			} else if(currentFigure.getBackground()==Color.blue) {
+				moveTo=blueStartPoint;
+			} else if(currentFigure.getBackground()==Color.red) {
+				moveTo=redStartPoint;
+			} 
+			//speichern das Figure gerückt ist
+			currentPlayer.getInBase().remove(currentFigure);
+			fieldFigurePosition.add(moveTo, currentFigure);
+			
+			//Befehl für GUI
+			moveTo =+ fieldNumber;
+		}
+		
+		else {
+			if(WÜRFEL != 6) {//Würfel ist nicht 6
+				blockedFigure.add(currentFigure);
+				return;
+			}
+			if(currentFigure.getBackground()==Color.yellow) {
+				moveTo=yellowStartPoint;
+			} else if(currentFigure.getBackground()==Color.green) {
+				moveTo=greenStartPoint;
+			} else if(currentFigure.getBackground()==Color.blue) {
+				moveTo=blueStartPoint;
+			} else if(currentFigure.getBackground()==Color.red) {
+				moveTo=redStartPoint;
+			} 
+			//speichern das Figure gerückt ist
+			fieldFigurePosition.add(moveTo, currentFigure);
+			
+			//Befehl für GUI
+			moveTo =+ fieldNumber;
+		}
+		
+		//NextPlayerOrAgain
+		if(WÜRFEL != 6) nextPlayer();
+		
+		blockedFigure.clear();
 		notifyObservers();
 	}
 	
@@ -150,7 +293,24 @@ public class Game implements Observable, Observer{		int test =0;
 		if(toKickFigure.getBackground()==yellowPlayer.getColor()) {
 			yellowPlayer.addInBase(toKickFigure);
 			kickTo = yellowPlayer.getInBase().indexOf(toKickFigure);
+			kickTo =+ yellowNumber;
 		}
+		else if(toKickFigure.getBackground()== greenPlayer.getColor()) {
+			greenPlayer.addInBase(toKickFigure);
+			kickTo = greenPlayer.getInBase().indexOf(toKickFigure);
+			kickTo =+ greenNumber;
+		}
+		else if(toKickFigure.getBackground()== bluePlayer.getColor()) {
+			bluePlayer.addInBase(toKickFigure);
+			kickTo = bluePlayer.getInBase().indexOf(toKickFigure);
+			kickTo =+ blueNumber;
+		}
+		else if(toKickFigure.getBackground()== redPlayer.getColor()) {
+			redPlayer.addInBase(toKickFigure);
+			kickTo = redPlayer.getInBase().indexOf(toKickFigure);
+			kickTo =+ redNumber;
+		}
+		kickTo =+ baseNumber;
 		
 	}
 
@@ -166,8 +326,9 @@ public class Game implements Observable, Observer{		int test =0;
 		System.out.println(this.currentPlayer.getName() + " hat eine " + gewürfelt + " gewürfelt");
 		test++;
 //////////
+		//Erste Runde
 		if(round == 0) {
-			moveTo = 000;
+			moveTo = RESET;
 			if(dices.size() == players.size()) {
 				System.out.println(players);
 				System.out.println("Spieler sortieren");
@@ -177,7 +338,9 @@ public class Game implements Observable, Observer{		int test =0;
 			}
 		notifyObservers();
 		nextPlayer();
-		} else {
+		} 
+		//Andere Runden
+		else {
 			
 		}
 		
