@@ -31,7 +31,7 @@ public class Player {
 	public Color getColor() {
 		return color;
 	}
-	public boolean getBot() {
+	public boolean getIsBot() {
 		return this.bot;
 	}
 	public ArrayList<Figure> getFigures(){ 
@@ -117,13 +117,13 @@ public class Player {
 	
 /*****Methoden*****/	
 	
-	public void activateFigures() {
+	public void activateFigure() {
 		System.out.println("Alle Figuren von " + this.name + " wurden aktiviert und können laufen.");
 		for(Figure figure : this.figures) {
 			figure.setBackground(this.color);
 		}
 	}
-	public void activateFigures(Figure figure) {
+	public void activateFigure(Figure figure) {
 		System.out.println("Figure auf: " + figure.getArea() + ": " + figure.getPosition() + " wurde aktiviert und kann laufen.");
 		figure.setBackground(this.color);
 	}

@@ -85,7 +85,9 @@ public class Game implements Observable, Observer{		Random random = new Random()
 		round = 0;
 		currentPlayer = players.get(0);
 		this.update(null,null);///Würfel simulieren
+
 	}
+	
 
 /*****Methoden*****/	
 	
@@ -207,7 +209,7 @@ public class Game implements Observable, Observer{		Random random = new Random()
 		
 		for(Figure figure : currentPlayer.getFigures()) {
 			if(!blockedFigure.contains(figure)) {
-				currentPlayer.activateFigures(figure);
+				currentPlayer.activateFigure(figure);
 			}
 		}
 		
