@@ -2,8 +2,7 @@ package de.spe.model;
 
 import java.awt.Color;
 import java.util.ArrayList;
-
-import de.spe.control.GUINumber;
+import java.util.Arrays;
 
 public class Player {
 /*****Attribute*****/
@@ -13,8 +12,8 @@ public class Player {
 	private boolean bot;
 	
 	private ArrayList<Figure> figures;
-	private ArrayList<Figure> inBase;
-	private ArrayList<Figure> inHome;
+	private Figure[] inBase;
+	private Figure[] inHome;
 	
 	private int startField;
 	private int endField;
@@ -38,13 +37,19 @@ public class Player {
 	public ArrayList<Figure> getFigures(){ 
 		return figures;
 	}
-	public ArrayList<Figure> getInBase() {
+	public Figure[] getInBase() {
 		return inBase;
 	}
-	public void addInBase(Figure homeFigure) {
-		this.inBase.add(homeFigure);
+	public int addInBase(Figure homeFigure) {
+		for(int i = 0; i < 4; i++) {
+			if (this.inBase[i]==null){
+				this.inBase[i] = homeFigure;
+				return i;
+			}
+		}
+		return 3;
 	}
-	public ArrayList<Figure> getInHome() {
+	public Figure[] getInHome() {
 		return inHome;
 	}
 	public int getStartField() {
@@ -74,39 +79,40 @@ public class Player {
 		this.blockedColor = blockedColor;
 		this.bot = bot;
 		this.figures = new ArrayList<Figure>();
-		this.inHome = new ArrayList<Figure>();
+		this.inBase = new Figure[4];
+		this.inHome = new Figure[4];
 		
 		//Für Farbe richtige Nummern
 		if(color==Color.yellow) {
 			startField = GUINumber.yellowStartPoint.getNumber();
 			endField = GUINumber.yellowEndPoint.getNumber();
-		} else if(color==Color.green) {
+		} 
+		else if(color==Color.green) {
 			startField = GUINumber.greenStartPoint.getNumber();
 			endField = GUINumber.greenEndPoint.getNumber();
-		} else if(color==Color.blue) {
-			startField = GUINumber.blueStartPoint.getNumber();
-			endField = GUINumber.blueEndPoint.getNumber();
-		} else if(color==Color.red) {
+		} 
+		else if(color==Color.red) {
 			startField = GUINumber.redStartPoint.getNumber();
 			endField = GUINumber.redEndPoint.getNumber();
+		} 
+		else if(color==Color.blue) {
+			startField = GUINumber.blueStartPoint.getNumber();
+			endField = GUINumber.blueEndPoint.getNumber();
 		}
 		
-		//create Figure
-		this.inBase = new ArrayList<Figure>();		
+		//create Figure	
 		this.firstFigure = new Figure(color, 0);
 		this.figures.add(firstFigure);
-		this.inBase.add(firstFigure);		
+		this.addInBase(firstFigure);		
 		this.secondFigure = new Figure(color, 1);
 		this.figures.add(secondFigure);
-		this.inBase.add(secondFigure);	
+		this.addInBase(secondFigure);	
 		this.thirdFigure = new Figure(color, 2);
 		this.figures.add(thirdFigure);
-		this.inBase.add(thirdFigure);
+		this.addInBase(thirdFigure);
 		this.fourthFigure = new Figure(color, 3);
 		this.figures.add(fourthFigure);
-		this.inBase.add(fourthFigure);	
-		
-		this.blockFigure();
+		this.addInBase(fourthFigure);	
 	}
 	
 /*****Methoden*****/	

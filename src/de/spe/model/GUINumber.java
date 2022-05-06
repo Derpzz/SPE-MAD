@@ -1,17 +1,16 @@
-package de.spe.control;
+package de.spe.model;
 
 public enum GUINumber {
 	/*****Finals*****/
-	RESET(999), ///Würfel wieder aktivieren sonst nichts
 	yellowStartPoint  (0),
 	yellowEndPoint  (39),
 	greenStartPoint  (10),
 	greenEndPoint  (9),
-	blueStartPoint  (20),
-	blueEndPoint  (19),
-	redStartPoint  (30),
-	redEndPoint  (29),
-	WÜRFEL (2);
+	redStartPoint  (20),
+	redEndPoint  (19),
+	blueStartPoint  (30),
+	blueEndPoint  (29),
+	WÜRFEL (6);
 	
 	private int number;
 
