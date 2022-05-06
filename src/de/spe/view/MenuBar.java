@@ -29,7 +29,7 @@ public class MenuBar extends JMenuBar{
 		option = new JMenu("Optionen");
 		menuBar.add(option);
 		
-		info = new JMenu("Optionen");
+		info = new JMenu("Info");
 		menuBar.add(info);
 		
 		informationItem = new JMenuItem("Spielregeln");
