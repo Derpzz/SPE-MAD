@@ -84,7 +84,7 @@ public class Game implements Observable, Observer{		Random random = new Random()
 		System.out.println("Alle Spieler erstellt: " + this.players + "\n");
 		round = 0;
 		currentPlayer = players.get(0);
-		this.update(null);///Würfel simulieren
+		this.update(null,null);///Würfel simulieren
 	}
 
 /*****Methoden*****/	
@@ -127,7 +127,7 @@ public class Game implements Observable, Observer{		Random random = new Random()
 			this.currentPlayer=this.players.get(0);
 		}
 		wuerfe = 0;
-		this.update(null); ///test
+		this.update(null,null); ///test
 	}
 	
 ///checkMove
@@ -337,7 +337,7 @@ public class Game implements Observable, Observer{		Random random = new Random()
 /*****ObserverAndObseravable*****/
 	//Notify from Dice
 	@Override
-	public void update(Observable observable) {
+	public void update(Observable observable, Object wuerfel) {
 //		dices.add(observable.getData.getNumber);
 ///////////Würfel simulieren
 		int gewürfelt = random.nextInt(6)+1;
@@ -378,12 +378,8 @@ public class Game implements Observable, Observer{		Random random = new Random()
 	@Override
 	public void notifyObservers() {
 		for (Observer observer : observers) {
-			observer.update(this);
+			observer.update(this, currentFigure);
 		}
-	}
-	@Override
-	public Figure getData() {
-		return currentFigure;
 	}
 	
 }
