@@ -2,13 +2,12 @@ package de.spe.view;
 
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
+
+import de.spe.control.Observable;
+import de.spe.control.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 public class BoardPanel extends JPanel implements Observer{
 

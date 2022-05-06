@@ -1,18 +1,18 @@
 package de.spe.model;
 
-// TODO PLS change imports for new Observer
-import java.util.Observer;
-import java.util.Observable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import javax.swing.JButton;
 
+import de.spe.control.Observable;
+import de.spe.control.Observer;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class DiceAL extends Observable implements ActionListener{
+public class DiceAL  implements ActionListener, Observable{
 
     private List<Observer> observers = new ArrayList<Observer>();
     
@@ -73,7 +73,13 @@ public class DiceAL extends Observable implements ActionListener{
         if(observer != null && !observers.contains(observer))
             observers.add(observer);
     }
-
+    
+	@Override
+	public void removeObsever(Observer observer) {
+		observers.remove(observer);
+		
+	}
+    
     @Override
     public void notifyObservers()
     {
@@ -88,11 +94,10 @@ public class DiceAL extends Observable implements ActionListener{
         
         if(e.getSource() instanceof Dice button)
         {
-            //PLS add animation
+            //PLS add animation PPLLLLSSSSS
             button.setText(Integer.toString(rollTheDice()));
             deactivateDice(button);
 
         } 
-    }
-    
+    }    
 }
