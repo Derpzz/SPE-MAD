@@ -2,12 +2,13 @@ package de.spe.control;
 
 import javax.swing.JFrame;
 
+import de.spe.main.MADMain;
 import de.spe.model.Game;
 
 public class Controller {
 
     private static final Controller INSTANCE = new Controller();
-    private GameField frame;
+    private MADMain frame;
     private Game currentGame;
 
     private Controller()
@@ -25,7 +26,7 @@ public class Controller {
     }
 
     /**
-     * Creates and saves a new game instace while setting it as the current game.
+     * Creates and saves a new game instance while setting it as the current game.
      * @param yName name of yellow player
      * @param gName name of green player
      * @param bName name of blue player
@@ -41,7 +42,7 @@ public class Controller {
      * THIS METHOD SHOULD ONLY BE EXCUTED ONCE ON STARTUP.
      * @param frame
      */
-    public void setFrame(GameField frame)
+    public void setFrame(MADMain frame)
     {
         if(this.frame==null)
             this.frame = frame;
