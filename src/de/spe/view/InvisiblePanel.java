@@ -9,7 +9,7 @@ public class InvisiblePanel extends JPanel{
 	public InvisiblePanel() {
 		
 		this.setBackground(new Color(0xffffc0));
-		this.setVisible(true);
+		this.setVisible(false);
 	}
 	
 	

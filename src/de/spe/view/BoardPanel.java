@@ -39,258 +39,237 @@ public class BoardPanel extends JPanel implements Observer{
 		//Create Board-Panels
 		for (int i = 0; i < 121; i++) {
 
-			if (i == 0 | i == 1 | i == 11 | i == 12 | i == 44 | i >= 56 && i <= 59) {
-				//Add Yellow Bases to Array
-				if(i==0) {
+			//Add Yellow Bases to Array
+			switch (i) {
+				case 0:
 					this.add(baseY[0] = new YellowField());
-					
-				}else if(i==1) {
+				break;
+				case 1:
 					this.add(baseY[1] = new YellowField());
-				
-				}else if(i==11) {
+				break;
+				case 11:
 					this.add(baseY[2] = new YellowField());
-				
-				}else if(i==12) {
+				break;
+				case 12:
 					this.add(baseY[3] = new YellowField());
-				
-				//Add Yellow Homes to Array	
-				}else if(i==56) {
+				break;
+				//Add yellow home
+				case 56:
 					this.add(homeY[0] = new YellowField());
-				
-				}else if(i==57) {
+				break;
+				case 57:
 					this.add(homeY[1] = new YellowField());
-				
-				}else if(i==58) {
+				break;
+				case 58:
 					this.add(homeY[2] = new YellowField());
-				
-				}else if(i==59) {
+				break;
+				case 59:
 					this.add(homeY[3] = new YellowField());
-				
-				}else if(i==44) {
+				break;
+				case 44:
 					this.add(fieldPanelPosition[0] = new YellowField());
-				}
-
-			} else if (i == 9 | i == 10 | i == 20 | i == 21 | i==6 |5 == i % 11 && i <= 49 && i>5) {
+				break;
 				//Add Green Bases to Array
-				if(i==9) {
+				case 9:
 					this.add(baseG[0] = new GreenField());
-					
-				}else if(i==10) {
+				break;
+				case 10:
 					this.add(baseG[1] = new GreenField());
-				
-				}else if(i==20) {
+				break;
+				case 20:
 					this.add(baseG[2] = new GreenField());
-				
-				}else if(i==21) {
+				break;
+				case 21:
 					this.add(baseG[3] = new GreenField());
-					
-					//Add Green Homes to Array	
-				}else if(i==16) {
+				break;
+				//Add Green Homes to Array	
+				case 16:
 					this.add(homeG[0] = new GreenField());
-				
-				}else if(i==27) {
+				break;
+				case 27:
 					this.add(homeG[1] = new GreenField());
-				
-				}else if(i==38) {
+				break;
+				case 38:
 					this.add(homeG[2] = new GreenField());
-				
-				}else if(i==49) {
+				break;
+				case 49:
 					this.add(homeG[3] = new GreenField());
-				
-				}else if(i==6) {
+				break;
+				case 6:
 					this.add(fieldPanelPosition[10] = new GreenField());
-				}
-				
-			} else if (i == 99 | i == 100 | i == 110 | i == 111 | i==114 | 5 == i % 11 && i <= 114 && i>60) {
+				break;
 				//Add Blue Bases to Array
-				if(i==99) {
+				case 99:
 					this.add(baseB[0] = new BlueField());
-					
-				}else if(i==100) {
+				break;
+				case 100:
 					this.add(baseB[1] = new BlueField());
-				
-				}else if(i==110) {
+				break;
+				case 110:
 					this.add(baseB[2] = new BlueField());
-				
-				}else if(i==111) {
+				break;
+				case 111:
 					this.add(baseB[3] = new BlueField());
-					
-					//Add Blue Homes to Array	
-				}else if(i==71) {
+				break;
+				//Add Blue Homes to Array	
+				case 71:
 					this.add(homeB[0] = new BlueField());
-				
-				}else if(i==82) {
+				break;
+				case 82:
 					this.add(homeB[1] = new BlueField());
-				
-				}else if(i==93) {
+				break;
+				case 93:
 					this.add(homeB[2] = new BlueField());
-				
-				}else if(i==104) {
+				break;
+				case 104:
 					this.add(homeB[3] = new BlueField());
-				
-				}else if(i==114) {
+				break;
+				case 114:
 					this.add(fieldPanelPosition[30] = new BlueField());
-				}
-				
-			} else if (i == 108 | i == 109 | i == 119 | i == 120 | i==76 || i >= 61 && i <= 64) {
+				break;
 				//Add Red Bases to Array
-				if(i==108) {
+				case 108:
 					this.add(baseR[0] = new RedField());
-					
-				}else if(i==109) {
+				break;
+				case 109:
 					this.add(baseR[1] = new RedField());
-				
-				}else if(i==119) {
+				break;
+				case 119:
 					this.add(baseR[2] = new RedField());
-				
-				}else if(i==120) {
+				break;
+				case 120:
 					this.add(baseR[3] = new RedField());
-					
-					//Add Red Homes to Array	
-				}else if(i==61) {
+				break;
+				//Add Red Homes to Array	
+				case 61:
 					this.add(homeR[0] = new RedField());
-				
-				}else if(i==62) {
+				break;
+				case 62:
 					this.add(homeR[1] = new RedField());
-				
-				}else if(i==63) {
+				break;
+				case 63:
 					this.add(homeR[2] = new RedField());
-				
-				}else if(i==64) {
+				break;
+				case 64:
 					this.add(homeR[3] = new RedField());
-					
-				}else if(i==76) {
+				break;
+				case 76:
 					this.add(fieldPanelPosition[20] = new RedField());
-				}
-				
-			} else if (i >= 44 && i <= 76 && i!=60  || (4 == i % 11 || 5 == i % 11 || 6 == i % 11) && i!=60) {
-
-				//Add White-Panels to Array fieldPanelPosition
-				if(i==45) {
+				break;
+				case 45:
 					this.add(fieldPanelPosition[1] = new WhiteField());
-					
-				}else if(i==46) {
+				break;
+				case 46:
 					this.add(fieldPanelPosition[2] = new WhiteField());
-					
-				}else if(i==47) {
+				break;
+				case 47:
 					this.add(fieldPanelPosition[3] = new WhiteField());
-					
-				}else if(i==48) {
+				break;
+				case 48:
 					this.add(fieldPanelPosition[4] = new WhiteField());
-					
-				}else if(i==37) {
+				break;
+				case 37:
 					this.add(fieldPanelPosition[5] = new WhiteField());
-					
-				}else if(i==26) {
+				break;
+				case 26:
 					this.add(fieldPanelPosition[6] = new WhiteField());
-					
-				}else if(i==15) {
+				break;
+				case 15:
 					this.add(fieldPanelPosition[7] = new WhiteField());
-					
-				}else if(i==4) {
+				break;
+				case 4:
 					this.add(fieldPanelPosition[8] = new WhiteField());
-					
-				}else if(i==5) {
+				break;
+				case 5:
 					this.add(fieldPanelPosition[9] = new WhiteField());
-					
-				}else if(i==17) {
+				break;
+				case 17:
 					this.add(fieldPanelPosition[11] = new WhiteField());
-					
-				}else if(i==28) {
+				break;
+				case 28:
 					this.add(fieldPanelPosition[12] = new WhiteField());
-					
-				}else if(i==39) {
+				break;
+				case 39:
 					this.add(fieldPanelPosition[13] = new WhiteField());
-					
-				}else if(i==50) {
+				break;
+				case 50:
 					this.add(fieldPanelPosition[14] = new WhiteField());
-					
-				}else if(i==51) {
+				break;
+				case 51:
 					this.add(fieldPanelPosition[15] = new WhiteField());
-					
-				}else if(i==52) {
+				break;
+				case 52:
 					this.add(fieldPanelPosition[16] = new WhiteField());
-					
-				}else if(i==53) {
+				break;
+				case 53:
 					this.add(fieldPanelPosition[17] = new WhiteField());
-					
-				}else if(i==54) {
+				break;
+				case 54:
 					this.add(fieldPanelPosition[18] = new WhiteField());
-					
-				}else if(i==65) {
+				break;
+				case 65:
 					this.add(fieldPanelPosition[19] = new WhiteField());
-					
-				}else if(i==75) {
+				break;
+				case 75:
 					this.add(fieldPanelPosition[21] = new WhiteField());
-					
-				}else if(i==74) {
+				break;
+				case 74:
 					this.add(fieldPanelPosition[22] = new WhiteField());
-					
-				}else if(i==73) {
+				break;
+				case 73:
 					this.add(fieldPanelPosition[23] = new WhiteField());
-					
-				}else if(i==72) {
+				break;
+				case 72:
 					this.add(fieldPanelPosition[24] = new WhiteField());
-					
-				}else if(i==83) {
+				break;
+				case 83:
 					this.add(fieldPanelPosition[25] = new WhiteField());
-					
-				}else if(i==94) {
+				break;
+				case 94:
 					this.add(fieldPanelPosition[26] = new WhiteField());
-					
-				}else if(i==105) {
+				break;
+				case 105:
 					this.add(fieldPanelPosition[27] = new WhiteField());
-					
-				}else if(i==116) {
+				break;
+				case 116:
 					this.add(fieldPanelPosition[28] = new WhiteField());
-					
-				}else if(i==115) {
+				break;
+				case 115:
 					this.add(fieldPanelPosition[29] = new WhiteField());
-					
-				}else if(i==103) {
+				break;
+				case 103:
 					this.add(fieldPanelPosition[31] = new WhiteField());
-					
-				}else if(i==92) {
+				break;
+				case 92:
 					this.add(fieldPanelPosition[32] = new WhiteField());
-					
-				}else if(i==81) {
+				break;
+				case 81:
 					this.add(fieldPanelPosition[33] = new WhiteField());
-					
-				}else if(i==70) {
+				break;
+				case 70:
 					this.add(fieldPanelPosition[34] = new WhiteField());
-					
-				}else if(i==69) {
+				break;
+				case 69:
 					this.add(fieldPanelPosition[35] = new WhiteField());
-					
-				}else if(i==68) {
+				break;
+				case 68:
 					this.add(fieldPanelPosition[36] = new WhiteField());
-					
-				}else if(i==67) {
+				break;
+				case 67:
 					this.add(fieldPanelPosition[37] = new WhiteField());
-					
-				}else if(i==66) {
+				break;
+				case 66:
 					this.add(fieldPanelPosition[38] = new WhiteField());
-					
-				}else if(i==55) {
+				break;
+				case 55:
 					this.add(fieldPanelPosition[39] = new WhiteField());
-					
-				}
-			
+				break;
+				default:
+					InvisiblePanel x = new InvisiblePanel();
+					this.add(x);
+				break;
 			}
-
-			else {
-				InvisiblePanel x = new InvisiblePanel();
-				this.add(x);
-
-			}
-			
-			
-			
-			
-		}
-		
-		
-		
+		}				
 	}
 
 	@Override

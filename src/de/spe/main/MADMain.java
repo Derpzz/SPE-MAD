@@ -6,7 +6,6 @@ public class MADMain {
 
 	public static void main(String[] args) {
 		MainMadFrame mainfr = new MainMadFrame();
-
 	}
 
 }
