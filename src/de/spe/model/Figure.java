@@ -1,8 +1,11 @@
 package de.spe.model;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.border.EtchedBorder;
 
 import de.spe.control.FigureListener;
 
@@ -22,8 +25,9 @@ public class Figure extends JButton{
 		this.position = position;
 		this.area = Area.Base;
 		
+		this.setPreferredSize(new Dimension(25,25));
+		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		this.addActionListener(new FigureListener());
-		this.setBorderPainted(true);
 	}
 	
 /*****GetterAndSetter*****/

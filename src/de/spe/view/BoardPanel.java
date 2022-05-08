@@ -1,16 +1,31 @@
 package de.spe.view;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
 import de.spe.control.Observable;
 import de.spe.control.Observer;
+import de.spe.model.Area;
+import de.spe.model.Figure;
+import de.spe.model.Game;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 public class BoardPanel extends JPanel implements Observer{
 
+	private JPanel[] fieldPanelPosition;
+	
+	private JPanel[] baseY;
+	private JPanel[] baseG;
+	private JPanel[] baseR;
+	private JPanel[] baseB;
+	
+	private JPanel[] homeY;
+	private JPanel[] homeG;
+	private JPanel[] homeR;
+	private JPanel[] homeB;
 	
 	public BoardPanel() {
 		
@@ -20,19 +35,19 @@ public class BoardPanel extends JPanel implements Observer{
 		this.setBorder(BorderFactory.createLineBorder(Color.RED));
 		
 		//Array with All Game-Panels
-		JPanel[] fieldPanelPosition = new JPanel[40];
+		fieldPanelPosition = new JPanel[40];
 		
 		//Arraya with All Base-Panels
-		JPanel[] baseY = new JPanel[4];
-		JPanel[] baseG = new JPanel[4];
-		JPanel[] baseB = new JPanel[4];
-		JPanel[] baseR = new JPanel[4];
+		baseY = new JPanel[4];
+		baseG = new JPanel[4];
+		baseR = new JPanel[4];
+		baseB = new JPanel[4];
 		
 		//Arrays with All Home-Panels
-		JPanel[] homeY = new JPanel[4];
-		JPanel[] homeG = new JPanel[4];
-		JPanel[] homeB = new JPanel[4];
-		JPanel[] homeR = new JPanel[4];
+		homeY = new JPanel[4];
+		homeG = new JPanel[4];
+		homeR = new JPanel[4];
+		homeB = new JPanel[4];
 		
 		
 		//Create Board-Panels
@@ -272,14 +287,128 @@ public class BoardPanel extends JPanel implements Observer{
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
-		this.moveFigure();
-		
+	public void update(Observable observable, Object object) {
+		if(object == null) {
+			activateDice();
+		}
+		else if(observable instanceof Game currentGame && object instanceof Figure currentFigure) {
+			this.moveFigure(currentGame, currentFigure);
+		}
+
 	}
 	
-	private void moveFigure() {
-		
+	private void moveFigure(Game currentGame, Figure currentFigure) {
+		System.out.println("Ich bewege die Figure");
+		//Figure is moved in MainField
+		if(currentFigure.getArea() == Area.Main) {
+			this.fieldPanelPosition[currentFigure.getPosition()].add(currentFigure);
+			this.fieldPanelPosition[currentFigure.getPosition()].setVisible(false);
+			this.fieldPanelPosition[currentFigure.getPosition()].setVisible(true);
+		} 
+		//Figure is moved in Basis
+		else if(currentFigure.getArea() == Area.Base) {
+			//in yellow Base
+			if(currentFigure.getColor() == Color.yellow) {
+				this.baseY[currentFigure.getPosition()].add(currentFigure);
+				this.baseY[currentFigure.getPosition()].setVisible(false);
+				this.baseY[currentFigure.getPosition()].setVisible(true);
+				
+			}
+			//in green Base
+			else if(currentFigure.getColor() == Color.green) {
+				this.baseG[currentFigure.getPosition()].add(currentFigure);
+				this.baseG[currentFigure.getPosition()].setVisible(false);
+				this.baseG[currentFigure.getPosition()].setVisible(true);
+			}
+			//in red Base
+			else if(currentFigure.getColor() == Color.red) {
+				this.baseR[currentFigure.getPosition()].add(currentFigure);
+				this.baseR[currentFigure.getPosition()].setVisible(false);
+				this.baseR[currentFigure.getPosition()].setVisible(true);
+			}
+			//in blue Base
+			else if(currentFigure.getColor() == Color.blue) {
+				this.baseB[currentFigure.getPosition()].add(currentFigure);
+				this.baseB[currentFigure.getPosition()].setVisible(false);
+				this.baseB[currentFigure.getPosition()].setVisible(true);
+			}
+		}
+		//Figure is moved in Home
+		else if(currentFigure.getArea() == Area.Home) {
+			//in yellow Home
+			if(currentFigure.getColor() == Color.yellow) {
+				this.homeY[currentFigure.getPosition()].add(currentFigure);
+				this.homeY[currentFigure.getPosition()].setVisible(false);
+				this.homeY[currentFigure.getPosition()].setVisible(true);
+			}
+			//in green Home
+			if(currentFigure.getColor() == Color.green) {
+				this.homeG[currentFigure.getPosition()].add(currentFigure);
+				this.homeG[currentFigure.getPosition()].setVisible(false);
+				this.homeG[currentFigure.getPosition()].setVisible(true);
+			}
+			//in red Home
+			if(currentFigure.getColor() == Color.red) {
+				this.homeR[currentFigure.getPosition()].add(currentFigure);
+				this.homeR[currentFigure.getPosition()].setVisible(false);
+				this.homeR[currentFigure.getPosition()].setVisible(true);
+			}
+			//in blue Home
+			if(currentFigure.getColor() == Color.blue) {
+				this.homeB[currentFigure.getPosition()].add(currentFigure);
+				this.homeB[currentFigure.getPosition()].setVisible(false);
+				this.homeB[currentFigure.getPosition()].setVisible(true);
+			}
+		}
 	}
+	
+	private void updateLastField(Game currentGame, Figure currentFigure) {
+		//last Field was in Main
+		if(currentGame.getLastArea()==Area.Main) {
+			this.baseB[currentGame.getLastPosition()].setVisible(false);
+			this.baseB[currentGame.getLastPosition()].setVisible(true);
+		}
+		
+		//last Field was in Base
+		if(currentGame.getLastArea()==Area.Base) {
+			if(currentFigure.getColor()==Color.yellow) {
+				this.baseY[currentGame.getLastPosition()].setVisible(false);
+				this.baseY[currentGame.getLastPosition()].setVisible(true);
+			}
+			else if(currentFigure.getColor()==Color.green) {
+				this.baseG[currentGame.getLastPosition()].setVisible(false);
+				this.baseG[currentGame.getLastPosition()].setVisible(true);
+			}
+			else if(currentFigure.getColor()==Color.red) {
+				this.baseR[currentGame.getLastPosition()].setVisible(false);
+				this.baseR[currentGame.getLastPosition()].setVisible(true);
+			}
+			else if(currentFigure.getColor()==Color.blue) {
+				this.baseB[currentGame.getLastPosition()].setVisible(false);
+				this.baseB[currentGame.getLastPosition()].setVisible(true);
+			}
+		}
+		//last Field was in Home
+		else if(currentGame.getLastArea()==Area.Home) {
+			if(currentFigure.getColor()==Color.yellow) {
+				this.homeY[currentGame.getLastPosition()].setVisible(false);
+				this.homeY[currentGame.getLastPosition()].setVisible(true);
+			}
+			else if(currentFigure.getColor()==Color.green) {
+				this.homeG[currentGame.getLastPosition()].setVisible(false);
+				this.homeG[currentGame.getLastPosition()].setVisible(true);
+			}
+			else if(currentFigure.getColor()==Color.red) {
+				this.homeR[currentGame.getLastPosition()].setVisible(false);
+				this.homeR[currentGame.getLastPosition()].setVisible(true);
+			}
+			else if(currentFigure.getColor()==Color.blue) {
+				this.homeB[currentGame.getLastPosition()].setVisible(false);
+				this.homeB[currentGame.getLastPosition()].setVisible(true);
+			}
+		}
+	}
+	
 	
 	public void activateDice() {
 		
