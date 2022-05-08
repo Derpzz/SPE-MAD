@@ -341,6 +341,17 @@ public class Game implements Observable, Observer{		Random random = new Random()
 
 	}
 	
+	private void moveBot() {
+		ArrayList<Figure> rdmMoveFigure = new ArrayList<Figure>();
+		
+		for(Figure figure : currentPlayer.getFigures()) {
+			if(!blockedFigure.contains(figure)) {
+				int moveScore = 0;
+				
+			}
+		}
+	}
+	
 //Kick Player
 	private void kickFigure(int moveTo) {
 		int kickTo = 0;

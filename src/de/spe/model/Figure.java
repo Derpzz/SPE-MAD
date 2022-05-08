@@ -16,7 +16,7 @@ public class Figure extends JButton{
 	private int position;
 	private Color color;
 	private Area area;
-
+	private int moveScore;
 	
 /*****Constructor*****/
 	public Figure(Color color, int position) {
@@ -46,6 +46,12 @@ public class Figure extends JButton{
 	}
 	public void setArea(Area area) {
 		this.area = area;
+	}
+	public int getMoveScore() {
+		return moveScore;
+	}
+	public void setMoveScore(int moveScore) {
+		this.moveScore = moveScore;
 	}
 	
 	
