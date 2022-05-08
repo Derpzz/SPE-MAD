@@ -12,7 +12,7 @@ public class MADMain {
 		
 		Controller.getInstance().setFrame(new MainMadFrame());
 		
-		Controller.getInstance().newGame("YELLOW", "GREEN", "RED", "BLUE");
+		Controller.getInstance().newGame("YELLOW",true, "GREEN", true,"RED",true, "BLUE",true);
         
 		System.out.println("\nENDE");
 	}

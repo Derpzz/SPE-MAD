@@ -50,6 +50,9 @@ public class Figure extends JButton{
 	public int getMoveScore() {
 		return moveScore;
 	}
+	public void addMoveScore(int moveScore) {
+		this.moveScore = this.moveScore + moveScore;
+	}
 	public void setMoveScore(int moveScore) {
 		this.moveScore = moveScore;
 	}
