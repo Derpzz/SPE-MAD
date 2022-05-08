@@ -42,7 +42,8 @@ public class Player {
 	}
 	public int addInBase(Figure homeFigure) {
 		for(int i = 0; i < 4; i++) {
-			if (this.inBase[i]==null){
+			System.out.println(this.inBase[0]);
+			if (this.inBase[i] == null){
 				this.inBase[i] = homeFigure;
 				return i;
 			}
@@ -113,30 +114,49 @@ public class Player {
 		this.fourthFigure = new Figure(color, 3);
 		this.figures.add(fourthFigure);
 		this.addInBase(fourthFigure);	
+		
+		this.blockFigure();
 	}
 	
 /*****Methoden*****/	
 	
+	//aktivieren deaktivieren Farbe
 	public void activateFigures() {
-		System.out.println("Alle Figuren von " + this.name + " wurden aktiviert und können laufen.");
 		for(Figure figure : this.figures) {
 			figure.setBackground(this.color);
 		}
 	}
 	public void activateFigures(Figure figure) {
-		System.out.println("Figure auf: " + figure.getArea() + ": " + figure.getPosition() + " wurde aktiviert und kann laufen.");
 		figure.setBackground(this.color);
 	}
 	
 	public void blockFigure() {
-		System.out.println("Alle Figuren von " + this.name + " wurden deaktiviert.");
 		for(Figure figure : this.figures) {
 			figure.setBackground(this.blockedColor);
 		}
 	}
 	public void blockFigure(Figure figure) {
-		System.out.println("Figure auf: " + figure.getArea() + ": " + figure.getPosition() + " wurde deaktiviert.");
 		figure.setBackground(this.blockedColor);
+	}
+	
+	//Größe der Arrays
+	public int baseSize() {
+		int count = 0;
+		for(Figure figure : this.inBase) {
+			if(figure != null) {
+				count = count +1;
+			}
+		}
+		return count;
+	}
+	public int homeSize() {
+		int count = 0;
+		for(Figure figure : this.inHome) {
+			if(figure != null) {
+				count = count +1;
+			}
+		}
+		return count;
 	}
 	
 /*****Override*****/	

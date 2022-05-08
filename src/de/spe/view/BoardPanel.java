@@ -7,6 +7,8 @@ import java.awt.GridLayout;
 import de.spe.control.Observable;
 import de.spe.control.Observer;
 import de.spe.model.Area;
+import de.spe.model.Colors;
+import de.spe.model.Dice;
 import de.spe.model.Figure;
 import de.spe.model.Game;
 
@@ -26,6 +28,8 @@ public class BoardPanel extends JPanel implements Observer{
 	private JPanel[] homeG;
 	private JPanel[] homeR;
 	private JPanel[] homeB;
+	
+	private Dice dice;
 	
 	public BoardPanel() {
 		
@@ -278,6 +282,9 @@ public class BoardPanel extends JPanel implements Observer{
 				case 55:
 					this.add(fieldPanelPosition[39] = new WhiteField());
 				break;
+				case 60:
+					this.add(dice = new Dice());
+				break;
 				default:
 					InvisiblePanel x = new InvisiblePanel();
 					this.add(x);
@@ -288,17 +295,29 @@ public class BoardPanel extends JPanel implements Observer{
 
 	@Override
 	public void update(Observable observable, Object object) {
+		
+		//Farbe vom Würfel
+		if(observable instanceof Game currentGame) {
+			if(currentGame.getCurrentPlayer() != null) {
+				this.dice.setBackground(currentGame.getCurrentPlayer().getColor());
+			}
+		}
+			
 		if(object == null) {
 			activateDice();
-		}
-		else if(observable instanceof Game currentGame && object instanceof Figure currentFigure) {
+		} else if(observable instanceof Game currentGame && object instanceof Figure currentFigure) {
 			this.moveFigure(currentGame, currentFigure);
+			updateLastField(currentGame, currentFigure);
+			if(currentGame.getToKickFigure() != null) {
+				this.kickFigure(currentGame);
+			}
+			activateDice();
 		}
 
 	}
 	
 	private void moveFigure(Game currentGame, Figure currentFigure) {
-		System.out.println("Ich bewege die Figure");
+//		System.out.println("Ich bewege die Figure");
 		//Figure is moved in MainField
 		if(currentFigure.getArea() == Area.Main) {
 			this.fieldPanelPosition[currentFigure.getPosition()].add(currentFigure);
@@ -362,11 +381,34 @@ public class BoardPanel extends JPanel implements Observer{
 		}
 	}
 	
+	private void kickFigure(Game currentGame) {
+		if(currentGame.getToKickFigure().getColor()== Color.yellow) {
+			this.baseY[currentGame.getToKickFigure().getPosition()].add(currentGame.getToKickFigure());
+			this.baseY[currentGame.getToKickFigure().getPosition()].setVisible(false);
+			this.baseY[currentGame.getToKickFigure().getPosition()].setVisible(true);
+		}
+		else if(currentGame.getToKickFigure().getColor()== Color.green) {
+			this.baseG[currentGame.getToKickFigure().getPosition()].add(currentGame.getToKickFigure());
+			this.baseG[currentGame.getToKickFigure().getPosition()].setVisible(false);
+			this.baseG[currentGame.getToKickFigure().getPosition()].setVisible(true);
+		}
+		if(currentGame.getToKickFigure().getColor()== Color.red) {
+			this.baseR[currentGame.getToKickFigure().getPosition()].add(currentGame.getToKickFigure());
+			this.baseR[currentGame.getToKickFigure().getPosition()].setVisible(false);
+			this.baseR[currentGame.getToKickFigure().getPosition()].setVisible(true);
+		}
+		if(currentGame.getToKickFigure().getColor()== Color.blue) {
+			this.baseB[currentGame.getToKickFigure().getPosition()].add(currentGame.getToKickFigure());
+			this.baseB[currentGame.getToKickFigure().getPosition()].setVisible(false);
+			this.baseB[currentGame.getToKickFigure().getPosition()].setVisible(true);
+		}
+	}
+	
 	private void updateLastField(Game currentGame, Figure currentFigure) {
 		//last Field was in Main
 		if(currentGame.getLastArea()==Area.Main) {
-			this.baseB[currentGame.getLastPosition()].setVisible(false);
-			this.baseB[currentGame.getLastPosition()].setVisible(true);
+			this.fieldPanelPosition[currentGame.getLastPosition()].setVisible(false);
+			this.fieldPanelPosition[currentGame.getLastPosition()].setVisible(true);
 		}
 		
 		//last Field was in Base
@@ -411,6 +453,6 @@ public class BoardPanel extends JPanel implements Observer{
 	
 	
 	public void activateDice() {
-		
+		this.dice.setEnabled(true);
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Random;
 
 import javax.swing.JButton;
 
+import de.spe.control.Controller;
 import de.spe.control.Observable;
 import de.spe.control.Observer;
 
@@ -18,7 +19,7 @@ public class DiceAL  implements ActionListener, Observable{
     
     private static final DiceAL INSTANCE = new DiceAL();
     private final Random rand;
-    private int lastRoll;
+    private Integer lastRoll;
 
     private DiceAL() 
     {
@@ -48,12 +49,12 @@ public class DiceAL  implements ActionListener, Observable{
      * Rolls the dice
      * @return number between 1 and 6 (inclusive)
      */
-    public int rollTheDice()
+    public Integer rollTheDice()
     {
         return lastRoll = rand.nextInt(6) + 1; 
     }
 
-    public int getLastRoll()
+    public Integer getLastRoll()
     {
         return lastRoll;
     }
@@ -92,12 +93,14 @@ public class DiceAL  implements ActionListener, Observable{
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        if(e.getSource() instanceof Dice button)
+        if(e.getSource() instanceof Dice diceBtn)
         {
-            //PLS add animation PPLLLLSSSSS
-            button.setText(Integer.toString(rollTheDice()));
-            deactivateDice(button);
-
+            //PLS add animation PLLLLSSSSS
+        	lastRoll = rollTheDice();
+        	diceBtn.setText(Integer.toString(lastRoll));
+            deactivateDice(diceBtn);
+            
+            notifyObservers();
         } 
     }    
 }
