@@ -41,14 +41,15 @@ public class Player {
 		return inBase;
 	}
 	public int addInBase(Figure homeFigure) {
-		for(int i = 0; i < 4; i++) {
-			System.out.println(this.inBase[0]);
+		int i;
+		for(i = 0; i < 4; i++) {
 			if (this.inBase[i] == null){
+				System.out.println(this.inBase[i]);
 				this.inBase[i] = homeFigure;
-				return i;
+				break;
 			}
 		}
-		return 3;
+		return i;
 	}
 	public Figure[] getInHome() {
 		return inHome;

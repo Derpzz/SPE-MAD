@@ -13,8 +13,15 @@ public class MADMain {
 		Controller.getInstance().setFrame(new MainMadFrame());
 		
 		Controller.getInstance().newGame("YELLOW",true, "GREEN", true,"RED",true, "BLUE",true);
+		
+		
         
 		System.out.println("\nENDE");
+		
+		for(int i = 0; i<10; i++) {
+			System.out.println(i);
+			continue;
+		}
 	}
 
 }

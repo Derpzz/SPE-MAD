@@ -56,6 +56,13 @@ public class Figure extends JButton{
 	public void setMoveScore(int moveScore) {
 		this.moveScore = moveScore;
 	}
+
+	@Override
+	public String toString() {
+		return "Figure [position=" + position + ", color=" + color + ", area=" + area + ", moveScore=" + moveScore
+				+ "]";
+	}
 	
+/*****toStrong*****/
 	
 }
