@@ -152,7 +152,8 @@ public class Game implements Observable, Observer{
 ///checkMove
 	public void checkMove() {
 		System.out.println("Ich checke jetzt was " + currentPlayer.getName() + " machen kann.");
-		
+		System.out.println(this.blockedFigure);
+		System.out.println(this.currentPlayer.getInBase());
 	/// Alle Figur sind in der Base		
 		 if(this.currentPlayer.baseSize() == 4){
 			if(DiceAL.getInsance().getLastRoll() != 6) {//gewürfelte Nummer ist nicht 6
@@ -188,11 +189,11 @@ public class Game implements Observable, Observer{
 						
 						if(Arrays.asList(this.fieldFigurePosition).indexOf(figure) + DiceAL.getInsance().getLastRoll() > this.currentPlayer.getEndField() + 4) {
 							this.blockedFigure.add(figure);// cant go to far into home
-							return;
+							break;
 						}
 						else if (this.currentPlayer.getInHome()[DiceAL.getInsance().getLastRoll() - lastStepsOnField] != null) {
 							this.blockedFigure.add(figure);// cant go to own field into home
-							return;
+							break;
 						}
 						
 						figure.addMoveScore(3);//into home
@@ -222,7 +223,7 @@ public class Game implements Observable, Observer{
 						if(this.fieldFigurePosition[moveTo] != null){//Figure on the Field
 							if(this.fieldFigurePosition[moveTo].getBackground() == this.currentPlayer.getColor()) {
 								this.blockedFigure.add(figure);//cant go to own field	
-								return;
+								break;
 							}
 							else {
 								figure.addMoveScore(4);//kick Figure
@@ -241,11 +242,11 @@ public class Game implements Observable, Observer{
 					moveTo = Arrays.asList(this.currentPlayer.getInHome()).indexOf(figure) + DiceAL.getInsance().getLastRoll();
 					if(moveTo > 3) {
 						this.blockedFigure.add(figure);//cant go to far in home
-						return;
+						break;
 					}
 					else if(this.currentPlayer.getInHome()[moveTo] != null) {
 						this.blockedFigure.add(figure);//cant go to own field in home
-						return;
+						break;
 					}
 					switch(moveTo) {
 						case 1:
@@ -261,14 +262,15 @@ public class Game implements Observable, Observer{
 				}	
 			//Figure befindet sich in Base			
 				else if(Arrays.asList(this.currentPlayer.getInBase()).contains(figure)) {
+					System.out.println("Befindet sich in Base");
 					if(DiceAL.getInsance().getLastRoll() != 6) {
 						this.blockedFigure.add(figure);
-						return;
+						break;
 					}
 					if(this.fieldFigurePosition[this.currentPlayer.getStartField()] != null) {
 						if(this.fieldFigurePosition[this.currentPlayer.getStartField()].getColor() == currentPlayer.getColor()) {
 							this.blockedFigure.add(figure);
-							return;
+							break;
 						}
 						else {
 							figure.addMoveScore(4);//kick Figure
@@ -325,7 +327,7 @@ public class Game implements Observable, Observer{
 		
 		
 	/// Figure steht auf dem Spielfeld		
-		else if(Arrays.asList(this.fieldFigurePosition).contains(this.currentFigure)) { 
+		else if(Arrays.asList(this.fieldFigurePosition).contains(this.currentFigure)) { System.out.println("Figure ist aquf dem Feld");
 		//Figure geht ins Haus
 			if(Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure) + DiceAL.getInsance().getLastRoll() >  this.currentPlayer.getEndField() && Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure) < this.currentPlayer.getEndField()) {//würde ins Ziel gehen
 				
@@ -356,7 +358,7 @@ public class Game implements Observable, Observer{
 			} 
 		}
 	/// Figur ist in der Base
-		else if(Arrays.asList(this.currentPlayer.getInBase()).contains(this.currentFigure)) {
+		else if(Arrays.asList(this.currentPlayer.getInBase()).contains(this.currentFigure)) {System.out.println("Figure ist aquf dem Base");
 			moveTo = this.currentPlayer.getStartField();
 			
 			//befindet sich da eine Figure
@@ -425,9 +427,9 @@ public class Game implements Observable, Observer{
 				
 			}
 		}
+		System.out.println("rdmMoveFigure Größe: "+ rdmMoveFigure);
 		this.moveFigure(rdmMoveFigure.get(random.nextInt(rdmMoveFigure.size())));
-	
-				
+		
 	}
 	
 //Kick Player
