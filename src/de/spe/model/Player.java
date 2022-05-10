@@ -1,14 +1,12 @@
 package de.spe.model;
 
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Player {
 /*****Attribute*****/
 	private String name;
-	private Color color;
-	private Color blockedColor;
+	private Colors color;
+	private Colors blockedColor;
 	private boolean bot;
 	
 	private ArrayList<Figure> figures;
@@ -28,10 +26,10 @@ public class Player {
 	public String getName() {
 		return name;
 	}
-	public Color getColor() {
+	public Colors getColor() {
 		return color;
 	}
-	public boolean getBot() {
+	public boolean isBot() {
 		return this.bot;
 	}
 	public ArrayList<Figure> getFigures(){ 
@@ -74,7 +72,7 @@ public class Player {
 	}
 	
 /*****Constructor*****/	
-	public Player(String name, Color color, Color blockedColor, Boolean bot) {
+	public Player(String name, Colors color, Colors blockedColor, Boolean bot) {
 		super();
 		this.name = name;
 		this.color = color;
@@ -85,19 +83,19 @@ public class Player {
 		this.inHome = new Figure[4];
 		
 		//Für Farbe richtige Nummern
-		if(color==Color.yellow) {
+		if(color==Colors.Yellow) {
 			startField = GUINumber.yellowStartPoint.getNumber();
 			endField = GUINumber.yellowEndPoint.getNumber();
 		} 
-		else if(color==Color.green) {
+		else if(color==Colors.Green) {
 			startField = GUINumber.greenStartPoint.getNumber();
 			endField = GUINumber.greenEndPoint.getNumber();
 		} 
-		else if(color==Color.red) {
+		else if(color==Colors.Red) {
 			startField = GUINumber.redStartPoint.getNumber();
 			endField = GUINumber.redEndPoint.getNumber();
 		} 
-		else if(color==Color.blue) {
+		else if(color==Colors.Blue) {
 			startField = GUINumber.blueStartPoint.getNumber();
 			endField = GUINumber.blueEndPoint.getNumber();
 		}
@@ -124,20 +122,20 @@ public class Player {
 	//aktivieren deaktivieren Farbe
 	public void activateFigures() {
 		for(Figure figure : this.figures) {
-			figure.setBackground(this.color);
+			figure.setBackground(this.color.getColor());
 		}
 	}
 	public void activateFigures(Figure figure) {
-		figure.setBackground(this.color);
+		figure.setBackground(this.color.getColor());
 	}
 	
 	public void blockFigure() {
 		for(Figure figure : this.figures) {
-			figure.setBackground(this.blockedColor);
+			figure.setBackground(this.blockedColor.getColor());
 		}
 	}
 	public void blockFigure(Figure figure) {
-		figure.setBackground(this.blockedColor);
+		figure.setBackground(this.blockedColor.getColor());
 	}
 	
 	//Größe der Arrays

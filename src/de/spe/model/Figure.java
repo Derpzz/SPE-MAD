@@ -1,6 +1,5 @@
 package de.spe.model;
 
-import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -14,12 +13,12 @@ public class Figure extends JButton{
 	
 /*****Attribute*****/
 	private int position;
-	private Color color;
+	private Colors color;
 	private Area area;
 	private int moveScore;
 	
 /*****Constructor*****/
-	public Figure(Color color, int position) {
+	public Figure(Colors color, int position) {
 		super();
 		this.color = color;
 		this.position = position;
@@ -31,7 +30,7 @@ public class Figure extends JButton{
 	}
 	
 /*****GetterAndSetter*****/
-	public Color getColor() {
+	public Colors getColor() {
 		return color;
 	}
 	public int getPosition() {

@@ -1,7 +1,6 @@
 package de.spe.main;
 
 import de.spe.control.Controller;
-import de.spe.model.Game;
 import de.spe.view.MainMadFrame;
 
 public class MADMain {
