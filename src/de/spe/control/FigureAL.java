@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import de.spe.model.Figure;
 
-public class FigureListener implements ActionListener{
+public class FigureAL implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

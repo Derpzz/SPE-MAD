@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.Random;
 
 import de.spe.control.Controller;
+import de.spe.control.DiceAL;
 import de.spe.control.Observable;
 import de.spe.control.Observer;
+import de.spe.view.BoardPanel;
 
 public class Game implements Observable, Observer{
 
@@ -66,8 +68,11 @@ public class Game implements Observable, Observer{
 		this.canMove = false;
 		
 		//Add Observer
-		this.addObserver(Controller.getInstance().getFrame().getMainContent().getBoardPanel());
+		BoardPanel boardPanel = Controller.getInstance().getFrame().getMainContent().getBoardPanel();
+		this.addObserver(boardPanel);
 		DiceAL.getInsance().addObserver(this);
+		boardPanel.resetBoard();
+		
 		
 		//Create Players
 		if((yellowPlayerName != null && !yellowPlayerName.isBlank()) || yellowBot == true) {
@@ -127,17 +132,11 @@ public class Game implements Observable, Observer{
 		if(Arrays.asList(this.players).indexOf(this.currentPlayer)<this.players.length -1) {
 			this.currentPlayer=this.players[Arrays.asList(this.players).indexOf(this.currentPlayer) +1];
 		} else {
+			System.out.println(players);
 			this.currentPlayer=this.players[0];
 		}
 		System.out.println("-------------" + currentPlayer.getName() + " ist dran.------------");
 		wuerfe = 0;
-		
-//		if(this.currentPlayer.isBot()) {
-//			DiceAL.getInsance().rollTheDice();
-//			Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice().setText(Integer.toString(DiceAL.getInsance().getLastRoll()));
-//			DiceAL.getInsance().deactivateDice(Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice());
-//			DiceAL.getInsance().notifyObservers();			
-//		}
 	}
 	
 	private void againPlayer() {
@@ -163,7 +162,7 @@ public class Game implements Observable, Observer{
 					if(this.currentPlayer.isBot()) {// Bot würfelt selber
 						this.botDice();
 					}
-				}else {
+				}else {					
 					this.blockedFigure.clear();
 					this.nextPlayer();
 					this.notifyObservers();
@@ -174,13 +173,15 @@ public class Game implements Observable, Observer{
 				}
 			}
 			else {
-				System.out.println("Hallo???");
 				for(Figure figure : this.currentPlayer.getFigures()) {
 					figure.setMoveScore(1);
 				}
-				this.notifyObservers();
 				this.againPlayer();
-				this.blockedFigure.clear();
+				for(Figure figure : currentPlayer.getFigures()) {
+					if(!blockedFigure.contains(figure)) {
+						currentPlayer.activateFigures(figure);
+					}
+				}
 				if(currentPlayer.isBot() == true) {
 					this.botMove();
 				}
@@ -316,10 +317,23 @@ public class Game implements Observable, Observer{
 				currentFigure = null;
 				
 				//NextPlayerOrAgain
-				if(DiceAL.getInsance().getLastRoll() != 6) {
-					this.nextPlayer();
-				} else {
+				if(DiceAL.getInsance().getLastRoll() == 6){
 					this.againPlayer();
+				}
+				else if(this.currentPlayer.getInHome().length > 0 && this.wuerfe < 3) {
+					int finishedFigures = 0;
+					for(int i = 3; i==0 ; i--) {
+						if(currentPlayer.getInHome()[i] != null) {
+							finishedFigures = finishedFigures + 1;
+							break;
+						}
+					}
+					if(finishedFigures + currentPlayer.getInBase().length == 4) {
+						this.againPlayer();
+					}
+				}
+				else {
+					this.nextPlayer();
 				}
 				this.blockedFigure.clear();
 				this.canMove = false;

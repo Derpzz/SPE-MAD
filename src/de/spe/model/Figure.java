@@ -6,7 +6,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.border.EtchedBorder;
 
-import de.spe.control.FigureListener;
+import de.spe.control.FigureAL;
 
 @SuppressWarnings("serial")
 public class Figure extends JButton{
@@ -26,7 +26,7 @@ public class Figure extends JButton{
 		
 		this.setPreferredSize(new Dimension(25,25));
 		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-		this.addActionListener(new FigureListener());
+		this.addActionListener(new FigureAL());
 	}
 	
 /*****GetterAndSetter*****/

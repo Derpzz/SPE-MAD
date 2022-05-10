@@ -1,12 +1,10 @@
-package de.spe.model;
+package de.spe.control;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import de.spe.control.Controller;
-import de.spe.control.Observable;
-import de.spe.control.Observer;
+import de.spe.model.Dice;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -96,7 +94,9 @@ public class DiceAL  implements ActionListener, Observable{
             //PLS add animation PLLLLSSSSS
         	rollTheDice();
         	diceBtn.setText(Integer.toString(lastRoll));
-            deactivateDice(diceBtn);
+            if(Controller.getInstance().getCurrentGame() != null){
+            	this.deactivateDice(diceBtn);
+            }
             
             notifyObservers();
         } 

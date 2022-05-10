@@ -5,6 +5,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import de.spe.control.MenuAL;
+
 public class MenuBar extends JMenuBar{
 
 	public MenuBar(JFrame frame) {
@@ -18,6 +20,7 @@ public class MenuBar extends JMenuBar{
 		menuBar.add(menu);
 		
 		startGameItem = new JMenuItem("Spiel Starten");
+		startGameItem.addActionListener(new MenuAL());
 		menu.add(startGameItem);
 		
 	    saveGameItem = new JMenuItem("Spiel Speichern");

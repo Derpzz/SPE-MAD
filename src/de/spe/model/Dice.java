@@ -5,6 +5,8 @@ import java.awt.Dimension;
 
 import javax.swing.JButton;
 
+import de.spe.control.DiceAL;
+
 public class Dice extends JButton{
 	
 	public Dice() {

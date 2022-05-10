@@ -42,7 +42,6 @@ public class Player {
 		int i;
 		for(i = 0; i < 4; i++) {
 			if (this.inBase[i] == null){
-				System.out.println(this.inBase[i]);
 				this.inBase[i] = homeFigure;
 				break;
 			}

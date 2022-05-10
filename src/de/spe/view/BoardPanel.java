@@ -28,6 +28,8 @@ public class BoardPanel extends JPanel implements Observer{
 	private JPanel[] homeR;
 	private JPanel[] homeB;
 	
+	private JPanel[][] panels; 
+	
 	private Dice dice;
 	
 	public BoardPanel() {
@@ -289,7 +291,8 @@ public class BoardPanel extends JPanel implements Observer{
 					this.add(x);
 				break;
 			}
-		}				
+		}	
+		panels = new JPanel[][]{baseY, baseG, baseR, baseB, homeY, homeG, homeR, homeB, fieldPanelPosition};
 	}
 
 	@Override
@@ -458,4 +461,17 @@ public class BoardPanel extends JPanel implements Observer{
 	public Dice getDice(){
 		return this.dice;
 	}
+	
+	public void resetBoard()
+	    {
+	        for(int i = 0; i < panels.length; i++)
+	        {
+	            for(int j = 0; j < panels[i].length; j++)
+	            {
+	                panels[i][j].removeAll();
+	                panels[i][j].revalidate();
+	                panels[i][j].repaint();
+	            }
+	        }
+	    }
 }
