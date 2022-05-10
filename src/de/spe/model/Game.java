@@ -505,19 +505,19 @@ public class Game implements Observable, Observer{
 		int kickTo = 0;
 		this.toKickFigure = this.fieldFigurePosition[moveTo];
 		
-		if(this.toKickFigure.getColor() == this.players[0].getColor()) { //Yellow
+		if(this.toKickFigure.getColor() == Colors.Yellow) { //Yellow
 			this.players[0].addInBase(this.toKickFigure);
 			kickTo = Arrays.asList(this.players[0].getInBase()).indexOf(this.toKickFigure);
 		}
-		else if(this.toKickFigure.getColor() == this.players[1].getColor()) {//Green
+		else if(this.toKickFigure.getColor() == Colors.Green) {//Green
 			this.players[1].addInBase(this.toKickFigure);
 			kickTo = Arrays.asList(this.players[1].getInBase()).indexOf(this.toKickFigure);
 		}
-		else if(this.toKickFigure.getColor() == this.players[2].getColor()) {//Red
+		else if(this.toKickFigure.getColor() == Colors.Red) {//Red
 			this.players[2].addInBase(this.toKickFigure);
 			kickTo = Arrays.asList(this.players[2].getInBase()).indexOf(toKickFigure);
 		}	
-		else if(this.toKickFigure.getColor() == this.players[3].getColor()) {//Blue
+		else if(this.toKickFigure.getColor() == Colors.Blue) {//Blue
 			this.players[3].addInBase(this.toKickFigure);
 			kickTo = Arrays.asList(this.players[3].getInBase()).indexOf(this.toKickFigure);
 		}
@@ -594,3 +594,6 @@ public class Game implements Observable, Observer{
 	}
 	
 }
+
+
+///Players null fix -> ArrayList
