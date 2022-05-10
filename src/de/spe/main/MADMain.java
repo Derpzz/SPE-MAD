@@ -11,7 +11,7 @@ public class MADMain {
 		
 		Controller.getInstance().setFrame(new MainMadFrame());
 		
-		Controller.getInstance().newGame("YELLOW",true, "GREEN", true,"RED",true, "BLUE",true);
+		Controller.getInstance().newGame("Adem",true, "Jannik", true,"Bot", true, "Gent", true);
 		
 		
         

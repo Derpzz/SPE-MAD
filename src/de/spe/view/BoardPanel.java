@@ -130,16 +130,16 @@ public class BoardPanel extends JPanel implements Observer{
 				break;
 				//Add Blue Homes to Array	
 				case 71:
-					this.add(homeB[0] = new BlueField());
+					this.add(homeB[3] = new BlueField());
 				break;
 				case 82:
-					this.add(homeB[1] = new BlueField());
-				break;
-				case 93:
 					this.add(homeB[2] = new BlueField());
 				break;
+				case 93:
+					this.add(homeB[1] = new BlueField());
+				break;
 				case 104:
-					this.add(homeB[3] = new BlueField());
+					this.add(homeB[0] = new BlueField());
 				break;
 				case 114:
 					this.add(fieldPanelPosition[30] = new BlueField());
@@ -159,16 +159,16 @@ public class BoardPanel extends JPanel implements Observer{
 				break;
 				//Add Red Homes to Array	
 				case 61:
-					this.add(homeR[0] = new RedField());
+					this.add(homeR[3] = new RedField());
 				break;
 				case 62:
-					this.add(homeR[1] = new RedField());
-				break;
-				case 63:
 					this.add(homeR[2] = new RedField());
 				break;
+				case 63:
+					this.add(homeR[1] = new RedField());
+				break;
 				case 64:
-					this.add(homeR[3] = new RedField());
+					this.add(homeR[0] = new RedField());
 				break;
 				case 76:
 					this.add(fieldPanelPosition[20] = new RedField());
@@ -453,5 +453,9 @@ public class BoardPanel extends JPanel implements Observer{
 	
 	public void activateDice() {
 		this.dice.setEnabled(true);
+	}
+	
+	public Dice getDice(){
+		return this.dice;
 	}
 }

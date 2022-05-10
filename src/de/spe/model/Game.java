@@ -1,6 +1,5 @@
 package de.spe.model;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -132,9 +131,13 @@ public class Game implements Observable, Observer{
 		}
 		System.out.println("-------------" + currentPlayer.getName() + " ist dran.------------");
 		wuerfe = 0;
-		if(this.currentPlayer.isBot()) {
-			
-		}
+		
+//		if(this.currentPlayer.isBot()) {
+//			DiceAL.getInsance().rollTheDice();
+//			Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice().setText(Integer.toString(DiceAL.getInsance().getLastRoll()));
+//			DiceAL.getInsance().deactivateDice(Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice());
+//			DiceAL.getInsance().notifyObservers();			
+//		}
 	}
 	
 	private void againPlayer() {
@@ -156,20 +159,35 @@ public class Game implements Observable, Observer{
 					System.out.println("Du darfst nochmal würfeln. " + wuerfe);
 					currentFigure = null;
 					this.notifyObservers();
-					return;
+					
+					if(this.currentPlayer.isBot()) {// Bot würfelt selber
+						this.botDice();
+					}
 				}else {
 					this.blockedFigure.clear();
 					this.nextPlayer();
 					this.notifyObservers();
-					return;
+					
+					if(this.currentPlayer.isBot()) {// Bot würfelt selber
+						this.botDice();
+					}
 				}
 			}
 			else {
+				System.out.println("Hallo???");
 				for(Figure figure : this.currentPlayer.getFigures()) {
 					figure.setMoveScore(1);
 				}
+				this.notifyObservers();
+				this.againPlayer();
+				this.blockedFigure.clear();
+				if(currentPlayer.isBot() == true) {
+					this.botMove();
+				}
 			} 
-		 }
+		 } 
+		 else {
+			 System.out.println("Test");
 	//ckecke alle Figuren
 			for(Figure figure : this.currentPlayer.getFigures()) {
 				int moveTo = 0;
@@ -244,15 +262,21 @@ public class Game implements Observable, Observer{
 				else if (Arrays.asList(this.currentPlayer.getInHome()).contains(figure)) {
 					System.out.println("Eine Figur befindet sich in Home");
 					moveTo = Arrays.asList(this.currentPlayer.getInHome()).indexOf(figure) + DiceAL.getInsance().getLastRoll();
+					
+					System.out.println("Current Position: "+ Arrays.asList(this.currentPlayer.getInHome()).indexOf(figure));
+					System.out.println("Würfel " + DiceAL.getInsance().getLastRoll());
+					System.out.println("MoveTo in Check:" + moveTo);
+					
 					if(moveTo > 3) {
 						this.blockedFigure.add(figure);//cant go to far in home
 						continue;
 					}
 					else if(this.currentPlayer.getInHome()[moveTo] != null) {
 						this.blockedFigure.add(figure);//cant go to own field in home
-						break;
+						continue;
 					}
-					switch(moveTo) {
+					else {
+						switch(moveTo) {
 						case 1:
 							figure.addMoveScore(3);
 						break;
@@ -263,6 +287,8 @@ public class Game implements Observable, Observer{
 							figure.addMoveScore(5);
 						break;
 					}
+					}
+					
 				}	
 			//Figure befindet sich in Base			
 				else if(Arrays.asList(this.currentPlayer.getInBase()).contains(figure)) {
@@ -281,7 +307,6 @@ public class Game implements Observable, Observer{
 						}
 					} 
 					figure.addMoveScore(3);//out of Base
-
 				}
 			}	
 			
@@ -290,29 +315,36 @@ public class Game implements Observable, Observer{
 				System.out.println("Keine Figur kann laufen");
 				currentFigure = null;
 				
-				
-				this.notifyObservers();
 				//NextPlayerOrAgain
-				if(DiceAL.getInsance().getLastRoll() != 6) this.nextPlayer();
+				if(DiceAL.getInsance().getLastRoll() != 6) {
+					this.nextPlayer();
+				} else {
+					this.againPlayer();
+				}
 				this.blockedFigure.clear();
-				return;
-			} 
+				this.canMove = false;
+				this.notifyObservers();
+				
+				if(this.currentPlayer.isBot()) {// Bot würfelt selber
+					this.botDice();
+				}
+			} else {
 			
-			System.out.println("");
-			System.out.println("Geblockte Figuren nach Schleife: " + this.blockedFigure);
-			
-			for(Figure figure : currentPlayer.getFigures()) {
-				if(!blockedFigure.contains(figure)) {
-					currentPlayer.activateFigures(figure);
+				System.out.println("");
+				System.out.println("Geblockte Figuren nach Schleife: " + this.blockedFigure);
+				
+				for(Figure figure : currentPlayer.getFigures()) {
+					if(!blockedFigure.contains(figure)) {
+						currentPlayer.activateFigures(figure);
+					}
+				}
+				
+				if(currentPlayer.isBot() == true) {
+					this.botMove();
 				}
 			}
-			
-			if(currentPlayer.isBot() == true) {
-				this.botMove();
-			}
-		
+		}
 	}
-	
 //move Figure	
 	public void moveFigure(Figure currentFigure) {
 		if(this.canMove == false) return;
@@ -381,6 +413,10 @@ public class Game implements Observable, Observer{
 		else if (Arrays.asList(this.currentPlayer.getInHome()).contains(this.currentFigure)) { 			
 			moveTo = Arrays.asList(this.currentPlayer.getInHome()).indexOf(this.currentFigure) + DiceAL.getInsance().getLastRoll();
 			
+			System.out.println(Arrays.asList(this.currentPlayer.getInHome()).indexOf(this.currentFigure));
+			System.out.println(DiceAL.getInsance().getLastRoll());
+			System.out.println(moveTo);
+			
 			//speichern das Figure gerückt ist
 			this.lastPosition = Arrays.asList(this.currentPlayer.getInHome()).indexOf(this.currentFigure);
 			this.lastArea = currentFigure.getArea();
@@ -395,12 +431,14 @@ public class Game implements Observable, Observer{
 		
 		//GewonnenOrNot
 		if(currentPlayer.homeSize() == 4) {
-			System.out.println("Figuren in Home: " + currentPlayer.getInHome());
 			this.currentFigure.setPosition(moveTo);
 			this.blockedFigure.clear();
+			this.currentPlayer.blockFigure();
 			this.notifyObservers();
+			DiceAL.getInsance().deactivateDice(Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice());
 			
 			System.out.println(currentPlayer.getName() + " hat gewonnen!");
+			return;
 		}
 		else {
 		
@@ -415,6 +453,10 @@ public class Game implements Observable, Observer{
 		this.blockedFigure.clear();
 		this.canMove = false;
 		this.notifyObservers();
+		
+		if(this.currentPlayer.isBot()) {// Bot würfelt selber
+			this.botDice();
+		}
 		}
 
 
@@ -434,6 +476,13 @@ public class Game implements Observable, Observer{
 		System.out.println("rdmMoveFigure Größe: "+ rdmMoveFigure.size());
 		this.moveFigure(rdmMoveFigure.get(random.nextInt(rdmMoveFigure.size())));
 		
+	}
+	
+	private void botDice() {
+		DiceAL.getInsance().rollTheDice();
+		Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice().setText(Integer.toString(DiceAL.getInsance().getLastRoll()));
+		DiceAL.getInsance().deactivateDice(Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice());
+		DiceAL.getInsance().notifyObservers();	
 	}
 	
 //Kick Player
@@ -497,6 +546,10 @@ public class Game implements Observable, Observer{
 				this.nextPlayer();
 				this.notifyObservers(); 
 				this.currentPlayer.activateFigures();
+				
+				if(this.currentPlayer.isBot()) {// Bot würfelt selber
+					this.botDice();
+				}
 			}
 		
 		

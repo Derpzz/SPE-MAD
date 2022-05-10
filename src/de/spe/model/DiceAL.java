@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.swing.JButton;
-
 import de.spe.control.Controller;
 import de.spe.control.Observable;
 import de.spe.control.Observer;
@@ -65,7 +63,7 @@ public class DiceAL  implements ActionListener, Observable{
      */
     public void deactivateDice(Dice button)
     {
-        button.setEnabled(false);
+    	button.setEnabled(false);
     }
 
     @Override
@@ -96,7 +94,7 @@ public class DiceAL  implements ActionListener, Observable{
         if(e.getSource() instanceof Dice diceBtn)
         {
             //PLS add animation PLLLLSSSSS
-        	lastRoll = rollTheDice();
+        	rollTheDice();
         	diceBtn.setText(Integer.toString(lastRoll));
             deactivateDice(diceBtn);
             
