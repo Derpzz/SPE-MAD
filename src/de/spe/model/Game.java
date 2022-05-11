@@ -13,6 +13,7 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
+import de.spe.control.BotThread;
 import de.spe.control.Controller;
 import de.spe.control.DiceAL;
 import de.spe.control.Observable;
@@ -40,7 +41,8 @@ public class Game implements Observable, Observer, Serializable{
 	private Area lastArea;
 	
 	private boolean canMove;
-	Random random = new Random();
+	Random random;
+	BotThread botRun;
 	
 
 /*****GetterAndSetter*****/
@@ -75,6 +77,9 @@ public class Game implements Observable, Observer, Serializable{
 		this.observers = new ArrayList<Observer>();
 		
 		this.canMove = false;
+		random = new Random();
+		botRun = new BotThread();
+		
 		
 		//Add Observer
 		BoardPanel boardPanel = Controller.getInstance().getFrame().getMainContent().getBoardPanel();
@@ -197,7 +202,7 @@ public class Game implements Observable, Observer, Serializable{
 					this.nextPlayer();
 					this.notifyObservers();
 					
-					if(this.currentPlayer.isBot()) {// Bot würfelt selber
+					if(currentPlayer.isBot()) {
 						this.botDice();
 					}
 				}
@@ -212,8 +217,9 @@ public class Game implements Observable, Observer, Serializable{
 						currentPlayer.activateFigures(figure);
 					}
 				}
-				if(currentPlayer.isBot() == true) {
-					this.botMove();
+				if(currentPlayer.isBot()==true) {
+					Thread botThread = new Thread(botRun);
+					botThread.start();
 				}
 			} 
 		 } 
@@ -382,9 +388,9 @@ public class Game implements Observable, Observer, Serializable{
 						currentPlayer.activateFigures(figure);
 					}
 				}
-				
-				if(currentPlayer.isBot() == true) {
-					this.botMove();
+				if(currentPlayer.isBot()==true) {
+					Thread botThread = new Thread(botRun);
+					botThread.start();
 				}
 			}
 		}
@@ -524,7 +530,7 @@ public class Game implements Observable, Observer, Serializable{
 
 	}
 	
-	private void botMove() {
+	public void botMove() {
 		ArrayList<Figure> rdmMoveFigure = new ArrayList<Figure>();
 		
 		for(Figure figure : currentPlayer.getFigures()) {
@@ -532,18 +538,18 @@ public class Game implements Observable, Observer, Serializable{
 				for(int i = 1; i <= figure.getMoveScore(); i++) {
 					rdmMoveFigure.add(figure);
 				}
-				
 			}
 		}
 		System.out.println("rdmMoveFigure Größe: "+ rdmMoveFigure.size());
 		this.moveFigure(rdmMoveFigure.get(random.nextInt(rdmMoveFigure.size())));
-		
 	}
 	
-	private void botDice() {
+	private void botDice(){
 		DiceAL.getInsance().rollTheDice();
 		Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice().setText(Integer.toString(DiceAL.getInsance().getLastRoll()));
 		DiceAL.getInsance().deactivateDice(Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice());
+		Controller.getInstance().getFrame().getMainContent().getBoardPanel().revalidate();
+		Controller.getInstance().getFrame().getMainContent().getBoardPanel().repaint();	
 		DiceAL.getInsance().notifyObservers();	
 	}
 	

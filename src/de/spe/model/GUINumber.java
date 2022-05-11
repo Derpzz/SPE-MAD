@@ -9,8 +9,7 @@ public enum GUINumber {
 	redStartPoint  (20),
 	redEndPoint  (19),
 	blueStartPoint  (30),
-	blueEndPoint  (29),
-	WÜRFEL (6);
+	blueEndPoint  (29);
 	
 	private int number;
 
