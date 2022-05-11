@@ -1,5 +1,11 @@
 package de.spe.control;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
 import de.spe.model.Game;
 import de.spe.view.MainMadFrame;
 
@@ -51,34 +57,11 @@ public class Controller {
             this.frame = frame;
     }
 
-    /**
-     * Saves the current game
-     */
-    public void saveGame()
-    {
-        return;
-    }
-
-    /**
-     * Loads the specified game and sets it as the current game.
-     * @return loaded game
-     */
-    public Game loadGame()
-    {
-        this.currentGame = currentGame;
-        return currentGame;
-    }
-
 	public MainMadFrame getFrame() {
 		return frame;
 	}
 
 	public Game getCurrentGame() {
 		return currentGame;
-	}
-    
-    /**
-     * GetterAndSetter
-     */
-    
+	}  
 }

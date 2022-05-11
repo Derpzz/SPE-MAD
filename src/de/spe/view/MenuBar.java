@@ -23,12 +23,6 @@ public class MenuBar extends JMenuBar{
 		startGameItem.addActionListener(new MenuAL());
 		menu.add(startGameItem);
 		
-	    saveGameItem = new JMenuItem("Spiel Speichern");
-		menu.add(saveGameItem);
-		
-		loadGameItem = new JMenuItem("Spiel Laden");
-		menu.add(loadGameItem);
-		
 		option = new JMenu("Optionen");
 		menuBar.add(option);
 		

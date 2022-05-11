@@ -17,6 +17,7 @@ public class MenuAL implements ActionListener{
 	            switch(e.getActionCommand())
 	            {
 	                case "Spiel Starten":
+	                	System.out.println("AHHHHHHHHHHHHHHHHHHHHHHHH");
 	                	JTextField nameOne = new JTextField("             ");
 	                	nameOne.addFocusListener(new EmptyFL());
 	                	JTextField nameTwo = new JTextField("             ");
@@ -64,7 +65,8 @@ public class MenuAL implements ActionListener{
 	                	else {
 	                	 	DiceAL.getInsance().removeObsever((Observer)Controller.getInstance().getCurrentGame());
 		                    Controller.getInstance().newGame(nameOne.getText(), checkOne.isSelected(), nameTwo.getText(), checkTwo.isSelected(),nameThree.getText(),checkThree.isSelected(), nameFour.getText(),checkFour.isSelected());
-	                	}               
+	                	} 
+	                break;
 	            }
 	        }
 	}

@@ -1,5 +1,11 @@
 package de.spe.model;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -13,7 +19,7 @@ import de.spe.control.Observable;
 import de.spe.control.Observer;
 import de.spe.view.BoardPanel;
 
-public class Game implements Observable, Observer{
+public class Game implements Observable, Observer, Serializable{
 
 /*****Attribute*****/
 	private Player currentPlayer;
@@ -625,7 +631,5 @@ public class Game implements Observable, Observer{
 		for (Observer observer : observers) {
 			observer.update(this, currentFigure);
 		}
-	}
-
-	
+	}	
 }
