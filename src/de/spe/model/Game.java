@@ -13,8 +13,8 @@ import de.spe.view.BoardPanel;
 public class Game implements Observable, Observer{
 
 /*****Attribute*****/
-	private Player[] players;	
 	private Player currentPlayer;
+	private ArrayList<Player> players;	
 	
 	private Figure currentFigure;
 	private Figure toKickFigure;
@@ -60,7 +60,7 @@ public class Game implements Observable, Observer{
 		super();
 		
 		this.fieldFigurePosition = new Figure[40];
-		this.players = new Player[4];	
+		this.players = new ArrayList<Player>();	
 		this.blockedFigure = new ArrayList<Figure>();
 		this.dices = new ArrayList<Integer>();
 		this.observers = new ArrayList<Observer>();
@@ -75,30 +75,46 @@ public class Game implements Observable, Observer{
 		
 		
 		//Create Players
-		if((yellowPlayerName != null && !yellowPlayerName.isBlank()) || yellowBot == true) {
-			this.players[0] = new Player(yellowPlayerName, Colors.Yellow, Colors.YellowBlock, yellowBot);
+		if((!yellowPlayerName.isBlank()) || yellowBot == true) {
+			if(yellowBot == true) {
+				yellowPlayerName="yellowBot";
+			}
+			Player yellowPlayer = new Player(yellowPlayerName, Colors.Yellow, Colors.YellowBlock, yellowBot);
+			this.players.add(yellowPlayer);
 			System.out.println(yellowPlayerName + ": spielt als Gelber Spieler mit.");
-			this.createFigure(players[0]);
+			this.createFigure(players.get(players.indexOf(yellowPlayer)));
 		}
-		if(greenPlayerName != null && !greenPlayerName.isBlank() || greenBot == true) {
-			this.players[1] = new Player(greenPlayerName, Colors.Green, Colors.GreenBlock, greenBot);;
+		if(!greenPlayerName.isBlank() || greenBot == true) {
+			if(greenBot == true) {
+				greenPlayerName="greenBot";
+			}
+			Player greenPlayer = new Player(greenPlayerName, Colors.Green, Colors.GreenBlock, greenBot);
+			this.players.add(greenPlayer);
 			System.out.println(greenPlayerName + ": spielt als Grüner Spieler mit.");
-			this.createFigure(players[1]);
+			this.createFigure(players.get(players.indexOf(greenPlayer)));
 		}
-		if(redPlayerName != null && !redPlayerName.isBlank() || redBot == true) {
-			this.players[2] = new Player(redPlayerName, Colors.Red, Colors.RedBlock, redBot);
+		if(!redPlayerName.isBlank() || redBot == true) {
+			if(redBot == true) {
+				redPlayerName="redBot";
+			}
+			Player redPlayer = new Player(redPlayerName, Colors.Red, Colors.RedBlock, redBot);
+			this.players.add(redPlayer);
 			System.out.println(redPlayerName + ": spielt als Roter Spieler mit.");
-			this.createFigure(players[2]);
+			this.createFigure(players.get(players.indexOf(redPlayer)));
 		}
-		if(bluePlayerName != null && !bluePlayerName.isBlank() || blueBot == true) {
-			this.players[3] = new Player(bluePlayerName, Colors.Blue, Colors.BlueBlock, blueBot);
+		if(!bluePlayerName.isBlank() || blueBot == true) {
+			if(blueBot == true) {
+				bluePlayerName="blueBot";
+			}
+			Player bluePlayer = new Player(bluePlayerName, Colors.Blue, Colors.BlueBlock, blueBot);
+			this.players.add(bluePlayer);
 			System.out.println(bluePlayerName + ": spielt als Blauer Spieler mit.");
-			this.createFigure(players[3]);
+			this.createFigure(players.get(players.indexOf(bluePlayer)));
 		}
 		
 		System.out.println("Alle Spieler erstellt: " + this.players + "\n");
 		round = 0;
-		currentPlayer = players[0];
+		currentPlayer = players.get(0);
 		currentPlayer.activateFigures();
 	}
 
@@ -114,14 +130,14 @@ public class Game implements Observable, Observer{
 	}
 	
 //order Player
-	private void orderPlayers(Player[] players, ArrayList<Integer> dices) {
+	private void orderPlayers(ArrayList<Player> players, ArrayList<Integer> dices) {
 		int maxDicePos = 0;
 		for(int i = 0; i < dices.size()-1; i++) {
 			if(dices.get(i) < dices.get(i+1)) {
 				maxDicePos = i+1;
 			}
 		}
-		this.currentPlayer = players[maxDicePos];
+		this.currentPlayer = players.get(maxDicePos);
 		wuerfe = 0;
 	}
 	
@@ -129,11 +145,11 @@ public class Game implements Observable, Observer{
 	private void nextPlayer() {
 		this.currentPlayer.blockFigure();
 		
-		if(Arrays.asList(this.players).indexOf(this.currentPlayer)<this.players.length -1) {
-			this.currentPlayer=this.players[Arrays.asList(this.players).indexOf(this.currentPlayer) +1];
+		if(this.players.indexOf(this.currentPlayer) < this.players.size() -1) {
+			this.currentPlayer=this.players.get(this.players.indexOf(this.currentPlayer) +1);
 		} else {
 			System.out.println(players);
-			this.currentPlayer=this.players[0];
+			this.currentPlayer=this.players.get(0);
 		}
 		System.out.println("-------------" + currentPlayer.getName() + " ist dran.------------");
 		wuerfe = 0;
@@ -446,10 +462,11 @@ public class Game implements Observable, Observer{
 		//GewonnenOrNot
 		if(currentPlayer.homeSize() == 4) {
 			this.currentFigure.setPosition(moveTo);
-			this.blockedFigure.clear();
 			this.currentPlayer.blockFigure();
+			this.blockedFigure.clear();
 			this.notifyObservers();
 			DiceAL.getInsance().deactivateDice(Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice());
+			canMove = false;
 			
 			System.out.println(currentPlayer.getName() + " hat gewonnen!");
 			return;
@@ -505,23 +522,12 @@ public class Game implements Observable, Observer{
 		int kickTo = 0;
 		this.toKickFigure = this.fieldFigurePosition[moveTo];
 		
-		if(this.toKickFigure.getColor() == Colors.Yellow) { //Yellow
-			this.players[0].addInBase(this.toKickFigure);
-			kickTo = Arrays.asList(this.players[0].getInBase()).indexOf(this.toKickFigure);
-		}
-		else if(this.toKickFigure.getColor() == Colors.Green) {//Green
-			this.players[1].addInBase(this.toKickFigure);
-			kickTo = Arrays.asList(this.players[1].getInBase()).indexOf(this.toKickFigure);
-		}
-		else if(this.toKickFigure.getColor() == Colors.Red) {//Red
-			this.players[2].addInBase(this.toKickFigure);
-			kickTo = Arrays.asList(this.players[2].getInBase()).indexOf(toKickFigure);
-		}	
-		else if(this.toKickFigure.getColor() == Colors.Blue) {//Blue
-			this.players[3].addInBase(this.toKickFigure);
-			kickTo = Arrays.asList(this.players[3].getInBase()).indexOf(this.toKickFigure);
-		}
-			
+		for(Player player : players) {
+			if(player.getColor() == this.toKickFigure.getColor()) {
+				player.addInBase(this.toKickFigure);
+				kickTo = Arrays.asList(player.getInBase()).indexOf(this.toKickFigure);
+			}
+		}			
 
 		toKickFigure.setPosition(kickTo);
 		toKickFigure.setArea(Area.Base);
@@ -548,8 +554,8 @@ public class Game implements Observable, Observer{
 	//Erste Runde
 		if(this.round == 0) {
 			currentFigure = null;
-			if(this.dices.size() == this.players.length) {
-				orderPlayers(this.players, this.dices);
+			if(this.dices.size() == this.players.size()) {
+				this.orderPlayers(this.players, this.dices);
 				this.round = this.round + 1;
 				this.againPlayer();
 				this.notifyObservers(); 

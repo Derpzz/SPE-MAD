@@ -39,7 +39,7 @@ public class MenuAL implements ActionListener{
 //	                	Object[] options = {addPlayer, "Start Spiel"};
 	                	JOptionPane.showOptionDialog(
 	            	 			Controller.getInstance().getFrame(),
-	                         	"Gib die Spieler an, welche mitspielen.", 
+	                         	"Gib die Spieler an, welche mitspielen.\n Gelb", 
 	                         	"Player",            
 	                         	JOptionPane.OK_CANCEL_OPTION,
 	                         	JOptionPane.PLAIN_MESSAGE,
@@ -49,16 +49,16 @@ public class MenuAL implements ActionListener{
 	            			 );
 	                	
 	                	int players = 4;
-	                	if(nameOne.getText().isBlank() || nameOne.getText().isEmpty()) {
+	                	if(nameOne.getText().isBlank() && !checkOne.isSelected()) {
 	                		players = players -1;
 	                	}
-	                	if(nameTwo.getText().isBlank() || nameTwo.getText().isEmpty()) {
+	                	if(nameTwo.getText().isBlank() && !checkTwo.isSelected()) {
 	                		players = players -1;
 	                	}
-	                	if(nameThree.getText().isBlank() || nameThree.getText().isEmpty()) {
+	                	if(nameThree.getText().isBlank() && !checkThree.isSelected()) {
 	                		players = players -1;
 	                	}
-	                	if(nameFour.getText().isBlank() || nameFour.getText().isEmpty()) {
+	                	if(nameFour.getText().isBlank() && !checkFour.isSelected()) {
 	                		players = players -1;
 	                	}
 	                	if(players < 2) {
