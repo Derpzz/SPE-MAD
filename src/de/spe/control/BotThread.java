@@ -5,7 +5,7 @@ public class BotThread implements Runnable{
 	@Override
 	public void run() {
 		try {
-			Thread.sleep(100);
+			Thread.sleep(1500);
 			System.out.println("I sleep");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
