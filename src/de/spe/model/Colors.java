@@ -21,6 +21,7 @@ public enum Colors {
 	BlueField(new Color(0x4682B4)),
 	
 	Background(new Color(0xe0c073)),
+	BackBackground(new Color(0xccaf68)),
 	
 	White(new Color(0xf5f5f5));
 	

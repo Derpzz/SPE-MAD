@@ -1,12 +1,10 @@
 package de.spe.model;
 
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import de.spe.control.Controller;
@@ -223,7 +221,7 @@ public class Game implements Observable, Observer{
 				if(Arrays.asList(this.fieldFigurePosition).contains(figure)) {
 					System.out.println("Eine Figur befindet sich auf dem Spielfeld");
 				//würde ins Ziel gehen
-					if(Arrays.asList(this.fieldFigurePosition).indexOf(figure) + DiceAL.getInsance().getLastRoll() >  this.currentPlayer.getEndField() && Arrays.asList(this.fieldFigurePosition).indexOf(figure) < this.currentPlayer.getEndField()) {//cP + W > eF && cP < eF
+					if(Arrays.asList(this.fieldFigurePosition).indexOf(figure) + DiceAL.getInsance().getLastRoll() >  this.currentPlayer.getEndField() && Arrays.asList(this.fieldFigurePosition).indexOf(figure) <= this.currentPlayer.getEndField()) {//cP + W > eF && cP <= eF
 						int lastStepsOnField = this.currentPlayer.getEndField() - Arrays.asList(this.fieldFigurePosition).indexOf(figure);
 						
 						if(Arrays.asList(this.fieldFigurePosition).indexOf(figure) + DiceAL.getInsance().getLastRoll() > this.currentPlayer.getEndField() + 4) {
@@ -405,7 +403,7 @@ public class Game implements Observable, Observer{
 	/// Figure steht auf dem Spielfeld		
 		else if(Arrays.asList(this.fieldFigurePosition).contains(this.currentFigure)) { System.out.println("Figure ist auf dem Feld");
 		//Figure geht ins Haus
-			if(Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure) + DiceAL.getInsance().getLastRoll() >  this.currentPlayer.getEndField() && Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure) < this.currentPlayer.getEndField()) {//würde ins Ziel gehen
+			if(Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure) + DiceAL.getInsance().getLastRoll() >  this.currentPlayer.getEndField() && Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure) <= this.currentPlayer.getEndField()) {//cP + W > eF && cP <= eF
 				
 				int lastStepsOnField = this.currentPlayer.getEndField() - Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure);
 				moveTo = DiceAL.getInsance().getLastRoll() - lastStepsOnField -1;

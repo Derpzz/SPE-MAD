@@ -37,7 +37,7 @@ public class BoardPanel extends JPanel implements Observer{
 		//Layout of Board
 		this.setLayout(new GridLayout(11,11,5,5));
 		this.setBackground(new Color(0xe0c073));
-		this.setBorder(BorderFactory.createLineBorder(Color.RED));
+		this.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
 		
 		//Array with All Game-Panels
 		fieldPanelPosition = new JPanel[40];

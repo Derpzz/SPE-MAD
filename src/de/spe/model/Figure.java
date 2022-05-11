@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
 
 import de.spe.control.FigureAL;
 

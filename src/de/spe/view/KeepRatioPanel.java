@@ -1,10 +1,8 @@
 package de.spe.view;
 
-import java.awt.Color;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import de.spe.model.Colors;
 
 public class KeepRatioPanel extends JPanel{
 	
@@ -14,7 +12,7 @@ public class KeepRatioPanel extends JPanel{
 		this.setLayout(new SingleComponentAspectRatioKeeperLayout());
 		boardPanel = new BoardPanel();
 		this.add(boardPanel);
-		this.setBackground(new Color(0xfcfc8d));
+		this.setBackground(Colors.BackBackground.getColor());
 	}
 
 	
