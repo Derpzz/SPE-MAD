@@ -10,22 +10,18 @@ public class MainMadFrame extends JFrame{
 	public MainMadFrame() {
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setBounds(100,30,600,600);
+		this.setBounds(100,30,556,600);
 		
 		this.setResizable(true);
 		
-//		mainContent = new BoardPanel();
 		mainContent = new KeepRatioPanel();
 		this.setContentPane(mainContent);
 		
 		
-		
-		
-		ImageIcon icon = new ImageIcon("ressources/index.png");
+		ImageIcon icon = new ImageIcon("ressources/MADLogoTran.png");
 		this.setIconImage(icon.getImage());
 		
 		new MenuBar(this);
-		
 		
 		this.setTitle("SPE Mensch Ärgere Dich Nicht");
 		this.setVisible(true);

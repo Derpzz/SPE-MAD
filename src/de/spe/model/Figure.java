@@ -4,6 +4,7 @@ import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
 import de.spe.control.FigureAL;
@@ -25,7 +26,7 @@ public class Figure extends JButton{
 		this.area = Area.Base;
 		
 		this.setPreferredSize(new Dimension(25,25));
-		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		this.addActionListener(new FigureAL());
 	}
 	

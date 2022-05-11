@@ -4,14 +4,25 @@ import java.awt.Color;
 
 public enum Colors {
 	
-	Yellow(new Color(0xffff00)),
-	YellowBlock(new Color(0xcccc11)),
-	Green(new Color(0x00ff00)),
-	GreenBlock(new Color(0x11cc11)),
-	Red(new Color(0xff0000)),
-	RedBlock(new Color(0xcc1111)),
-	Blue(new Color(0x0000ff)),
-	BlueBlock(new Color(0x1111cc));
+	Yellow(new Color(0xffcc00)),
+	YellowBlock(new Color(0xffcc00)),
+	YellowField(new Color(0xffd700)),
+	
+	Green(new Color(0x5e752e)),
+	GreenBlock(new Color(0x5e752e)),
+	GreenField(new Color(0x6b8e23)),
+	
+	Red(new Color(0x962323)),
+	RedBlock(new Color(0x962323)),
+	RedField(new Color(0xb22222)),
+	
+	Blue(new Color(0x3a6b94)),
+	BlueBlock(new Color(0x3a6b94)),
+	BlueField(new Color(0x4682B4)),
+	
+	Background(new Color(0xe0c073)),
+	
+	White(new Color(0xf5f5f5));
 	
 	private final Color color;
 

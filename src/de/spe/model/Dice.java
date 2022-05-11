@@ -11,7 +11,7 @@ public class Dice extends JButton{
 	
 	public Dice() {
 		this.setText("6");
-		this.setBackground(Color.yellow);
+		this.setBackground(Colors.White.getColor());
 		this.setForeground(Color.black);
 		this.setPreferredSize(new Dimension(10,10));
 		

@@ -1,8 +1,13 @@
 package de.spe.model;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 import de.spe.control.Controller;
 import de.spe.control.DiceAL;
@@ -116,6 +121,11 @@ public class Game implements Observable, Observer{
 		round = 0;
 		currentPlayer = players.get(0);
 		currentPlayer.activateFigures();
+		Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice().setBackground(currentPlayer.getColor().getColor());
+		
+		if(currentPlayer.isBot() == true) {
+			this.botDice();
+		}
 	}
 
 /*****Methoden*****/	
@@ -468,6 +478,23 @@ public class Game implements Observable, Observer{
 			DiceAL.getInsance().deactivateDice(Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice());
 			canMove = false;
 			
+			String winText = currentPlayer.getName() + " hat das Spiel gewonnen.";
+			
+			Object[] options = {"Neues Spiel", "OK COOL"};
+			
+			int btnPressed = JOptionPane.showOptionDialog(
+					Controller.getInstance().getFrame() ,
+					winText,
+					"Glückwunsch",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.INFORMATION_MESSAGE,
+					new ImageIcon("ressources/MADLogoTran.png"),
+					options, 
+					options[0]);
+			if(btnPressed == 1) {
+				System.out.println("Ich mache nichts");
+			}
+
 			System.out.println(currentPlayer.getName() + " hat gewonnen!");
 			return;
 		}
@@ -562,6 +589,9 @@ public class Game implements Observable, Observer{
 				for(Player player : players) {
 					player.blockFigure();
 				}
+				if(currentPlayer.isBot() == true) {
+					this.botDice();
+				}
 			}else {
 				this.nextPlayer();
 				this.notifyObservers(); 
@@ -598,8 +628,6 @@ public class Game implements Observable, Observer{
 			observer.update(this, currentFigure);
 		}
 	}
+
 	
 }
-
-
-///Players null fix -> ArrayList

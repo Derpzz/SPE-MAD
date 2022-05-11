@@ -2,6 +2,10 @@ package de.spe.model;
 
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
+
 public class Player {
 /*****Attribute*****/
 	private String name;
@@ -121,19 +125,23 @@ public class Player {
 	//aktivieren deaktivieren Farbe
 	public void activateFigures() {
 		for(Figure figure : this.figures) {
+			figure.setBorder(BorderFactory.createRaisedBevelBorder());
 			figure.setBackground(this.color.getColor());
 		}
 	}
 	public void activateFigures(Figure figure) {
+		figure.setBorder(BorderFactory.createRaisedBevelBorder());
 		figure.setBackground(this.color.getColor());
 	}
 	
 	public void blockFigure() {
 		for(Figure figure : this.figures) {
+			figure.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 			figure.setBackground(this.blockedColor.getColor());
 		}
 	}
 	public void blockFigure(Figure figure) {
+		figure.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		figure.setBackground(this.blockedColor.getColor());
 	}
 	
