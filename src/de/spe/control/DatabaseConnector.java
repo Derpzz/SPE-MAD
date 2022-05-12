@@ -49,4 +49,19 @@ public class DatabaseConnector {
             throw e;
         }
     }
+
+    public static boolean executeIsQueryEmpty(String sqlString) throws SQLException
+    {
+        try (Connection con = DriverManager.getConnection(conString, "root", "")) {
+            Statement stmt= con.createStatement();
+            stmt.execute("USE mad");  
+            stmt= con.createStatement();
+            ResultSet rs = stmt.executeQuery(sqlString); 
+            if(rs.next())
+                return false;
+            return true;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

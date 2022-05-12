@@ -190,6 +190,10 @@ public void save() throws SQLException{
 		//currentGame.save();
 		if((lastID = currentGame.getLastID()) == -1)
 			throw new SQLException("Failed to retrieve GameID");
+
+		if(DatabaseConnector.executeIsQueryEmpty("SELECT * FROM t_person WHERE name ='" + name + "';"))
+			DatabaseConnector.execute("INSERT INTO t_person VALUES('" + name +"')");
+
 		
 		this.lastID = DatabaseConnector.executeGetID("INSERT INTO t_player (name, color, game_id) VALUES(" + "'" + name + "', " + "'" + color.name().toLowerCase() + "', " + lastID + ")");
 	}

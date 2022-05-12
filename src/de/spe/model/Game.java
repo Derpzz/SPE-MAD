@@ -516,7 +516,6 @@ public class Game implements Observable, Observer, Saveable{
 				}
 				
 			} catch (Exception e) {
-				System.out.println("Ach, fuck dich!");
 				System.out.println(e.getMessage());
 			}
 			
