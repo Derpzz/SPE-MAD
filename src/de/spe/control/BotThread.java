@@ -6,7 +6,6 @@ public class BotThread implements Runnable{
 	public void run() {
 		try {
 			Thread.sleep(Controller.getInstance().getBotTime());
-			System.out.println(Controller.getInstance().getBotTime());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

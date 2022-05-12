@@ -1,13 +1,9 @@
 package de.spe.model;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -17,13 +13,14 @@ import javax.swing.JTextField;
 
 import de.spe.control.BotThread;
 import de.spe.control.Controller;
+import de.spe.control.DatabaseConnector;
 import de.spe.control.DiceAL;
 import de.spe.control.EmptyFL;
 import de.spe.control.Observable;
 import de.spe.control.Observer;
 import de.spe.view.BoardPanel;
 
-public class Game implements Observable, Observer{
+public class Game implements Observable, Observer, Saveable{
 
 /*****Attribute*****/
 	private Player currentPlayer;
@@ -46,6 +43,8 @@ public class Game implements Observable, Observer{
 	private boolean canMove;
 	Random random;
 	BotThread botRun;
+
+	private int lastID;
 	
 
 /*****GetterAndSetter*****/
@@ -63,6 +62,15 @@ public class Game implements Observable, Observer{
 	}
 	public Area getLastArea() {
 		return this.lastArea;
+	}
+	public int getLastID()
+	{
+		return lastID;
+	}
+
+	public List<Figure> getBlockedFigures()
+	{
+		return blockedFigure;
 	}
 
 /*****Constructor
@@ -108,7 +116,7 @@ public class Game implements Observable, Observer{
 			}
 			Player greenPlayer = new Player(greenPlayerName, Colors.Green, Colors.GreenBlock, greenBot);
 			this.players.add(greenPlayer);
-			System.out.println(greenPlayerName + ": spielt als Grüner Spieler mit.");
+			System.out.println(greenPlayerName + ": spielt als Grï¿½ner Spieler mit.");
 			this.createFigure(players.get(players.indexOf(greenPlayer)));
 		}
 		if(!redPlayerName.isBlank() || redBot == true) {
@@ -147,13 +155,15 @@ public class Game implements Observable, Observer{
 		if(currentPlayer.isBot() == true) {
 			this.botDice();
 		}
+
+		lastID = -1;
 	}
 
 /*****Methoden*****/	
 	
 ///createFigures
 	private void createFigure(Player player) {
-		System.out.println("Ich platziere die Figuren für " + player.getName() + ".\n");
+		System.out.println("Ich platziere die Figuren fï¿½r " + player.getName() + ".\n");
 		for(Figure figure : player.getFigures()) {
 			this.currentFigure = figure;
 			notifyObservers();
@@ -199,7 +209,7 @@ public class Game implements Observable, Observer{
 					currentFigure = null;
 					this.notifyObservers();
 					
-					if(this.currentPlayer.isBot()) {// Bot würfelt selber
+					if(this.currentPlayer.isBot()) {// Bot wï¿½rfelt selber
 						this.botDice();
 					}
 				}else {					
@@ -235,6 +245,7 @@ public class Game implements Observable, Observer{
 				figure.setMoveScore(1);
 			//Figure befindet sich auf Spielfeld
 				if(Arrays.asList(this.fieldFigurePosition).contains(figure)) {
+					
 				//würde ins Ziel gehen
 					if(Arrays.asList(this.fieldFigurePosition).indexOf(figure) + DiceAL.getInsance().getLastRoll() >  this.currentPlayer.getEndField() && Arrays.asList(this.fieldFigurePosition).indexOf(figure) <= this.currentPlayer.getEndField()) {//cP + W > eF && cP <= eF
 						int lastStepsOnField = this.currentPlayer.getEndField() - Arrays.asList(this.fieldFigurePosition).indexOf(figure);
@@ -268,7 +279,7 @@ public class Game implements Observable, Observer{
 					
 						
 					
-				//würde sich auf Spielfeld bewegen
+				//wï¿½rde sich auf Spielfeld bewegen
 					else{
 						moveTo = Arrays.asList(this.fieldFigurePosition).indexOf(figure) + DiceAL.getInsance().getLastRoll();
 						if(moveTo>39) moveTo = moveTo - 40;
@@ -369,7 +380,7 @@ public class Game implements Observable, Observer{
 				this.canMove = false;
 				this.notifyObservers();
 				
-				if(this.currentPlayer.isBot()) {// Bot würfelt selber
+				if(this.currentPlayer.isBot()) {// Bot wï¿½rfelt selber
 					this.botDice();
 				}
 			} else {				
@@ -410,7 +421,7 @@ public class Game implements Observable, Observer{
 				int lastStepsOnField = this.currentPlayer.getEndField() - Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure);
 				moveTo = DiceAL.getInsance().getLastRoll() - lastStepsOnField -1;
 				
-				//speichern das Figure gerückt ist
+				//speichern das Figure gerï¿½ckt ist
 				this.lastPosition = Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure);
 				this.lastArea = currentFigure.getArea();
 				this.fieldFigurePosition[Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure)] = null;
@@ -425,7 +436,7 @@ public class Game implements Observable, Observer{
 				if(this.fieldFigurePosition[moveTo] != null){
 					this.kickFigure(moveTo); //zu kickende Figur
 				}
-				//speichern das Figure gerückt ist
+				//speichern das Figure gerï¿½ckt ist
 				this.lastPosition = Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure);
 				this.lastArea = currentFigure.getArea();
 				this.fieldFigurePosition[Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure)] = null;
@@ -442,7 +453,7 @@ public class Game implements Observable, Observer{
 				this.kickFigure(moveTo);
 			}
 
-			//speichern das Figure gerückt ist
+			//speichern das Figure gerï¿½ckt ist
 			this.lastPosition = Arrays.asList(this.currentPlayer.getInBase()).indexOf(this.currentFigure);
 			this.lastArea = currentFigure.getArea();
 			this.currentPlayer.getInBase()[Arrays.asList(this.currentPlayer.getInBase()).indexOf(this.currentFigure)] = null;
@@ -473,6 +484,22 @@ public class Game implements Observable, Observer{
 			this.notifyObservers();
 			DiceAL.getInsance().deactivateDice(Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice());
 			canMove = false;
+
+			try {
+				this.save();
+				for(Player player : players)
+				{
+					player.save();
+					for(Figure figure : player.getFigures())
+					{
+						figure.save();
+					}
+				}
+				
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			
 			
 			String winText = currentPlayer.getName() + " hat das Spiel gewonnen.";
 			
@@ -551,7 +578,7 @@ public class Game implements Observable, Observer{
 		this.canMove = false;
 		this.notifyObservers();
 		
-		if(this.currentPlayer.isBot()) {// Bot würfelt selber
+		if(this.currentPlayer.isBot()) {// Bot wï¿½rfelt selber
 			this.botDice();
 		}
 		}
@@ -611,6 +638,7 @@ public class Game implements Observable, Observer{
 	public void update(Observable observable, Object object) {
 
 		if(object instanceof Integer lastRoll) {
+
 			dices.add(lastRoll);
 			wuerfe = wuerfe + 1;
 		}
@@ -633,7 +661,7 @@ public class Game implements Observable, Observer{
 				this.notifyObservers(); 
 				this.currentPlayer.activateFigures();
 				
-				if(this.currentPlayer.isBot()) {// Bot würfelt selber
+				if(this.currentPlayer.isBot()) {// Bot wï¿½rfelt selber
 					this.botDice();
 				}
 			}
@@ -646,8 +674,6 @@ public class Game implements Observable, Observer{
 			this.canMove = true;
 			this.checkMove();	
 		}
-		
-		
 	}
 
 	@Override
@@ -663,5 +689,9 @@ public class Game implements Observable, Observer{
 		for (Observer observer : observers) {
 			observer.update(this, currentFigure);
 		}
+	}
+	@Override
+	public void save() throws SQLException{
+		lastID = DatabaseConnector.executeGetID("INSERT INTO t_game VALUES()");
 	}	
 }
