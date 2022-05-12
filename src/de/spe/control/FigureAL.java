@@ -10,7 +10,9 @@ public class FigureAL implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() instanceof Figure figure){
-			Controller.getInstance().getCurrentGame().moveFigure(figure);
+			if(!Controller.getInstance().getCurrentGame().getCurrentPlayer().isBot()) {
+				Controller.getInstance().getCurrentGame().moveFigure(figure);
+			}
 		}
 		
 		

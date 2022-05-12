@@ -14,10 +14,11 @@ public class Controller {
     private static final Controller INSTANCE = new Controller();
     private MainMadFrame frame;
     private Game currentGame;
+    
+    private int botTime = 1500;
 
     private Controller()
     {
-
     }
 
     /**
@@ -38,12 +39,20 @@ public class Controller {
      */
     public void newGame(String yName, String gName, String bName, String rName)
     {
-        this.currentGame = new Game(yName, gName, bName, rName);
+        try {
+			this.currentGame = new Game(yName, gName, bName, rName);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
     }
     
     public void newGame(String yName, boolean yBot, String gName, boolean gBot, String bName, boolean bBot, String rName, boolean rBot)
     {
-        this.currentGame = new Game(yName, yBot, gName, gBot, bName, bBot, rName, rBot);
+        try {
+			this.currentGame = new Game(yName, yBot, gName, gBot, bName, bBot, rName, rBot);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
     }
 
     /**
@@ -63,5 +72,14 @@ public class Controller {
 
 	public Game getCurrentGame() {
 		return currentGame;
+	}
+
+	public int getBotTime() {
+		return botTime;
+	}
+
+	public void setBotTime(int botTime) {
+		this.botTime = botTime;
 	}  
+	
 }

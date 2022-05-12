@@ -11,16 +11,19 @@ import java.util.Arrays;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 import de.spe.control.BotThread;
 import de.spe.control.Controller;
 import de.spe.control.DiceAL;
+import de.spe.control.EmptyFL;
 import de.spe.control.Observable;
 import de.spe.control.Observer;
 import de.spe.view.BoardPanel;
 
-public class Game implements Observable, Observer, Serializable{
+public class Game implements Observable, Observer{
 
 /*****Attribute*****/
 	private Player currentPlayer;
@@ -62,12 +65,13 @@ public class Game implements Observable, Observer, Serializable{
 		return this.lastArea;
 	}
 
-/*****Constructor*****/
-	public Game(String yellowPlayerName, String greenPlayerName, String redPlayerName, String bluePlayerName) {
+/*****Constructor
+ * @throws Exception *****/
+	public Game(String yellowPlayerName, String greenPlayerName, String redPlayerName, String bluePlayerName) throws Exception {
 		this(yellowPlayerName, false, greenPlayerName, false, redPlayerName, false, bluePlayerName, false);
 	}
 	
-	public Game(String yellowPlayerName, Boolean yellowBot, String greenPlayerName, Boolean greenBot, String redPlayerName, Boolean redBot, String bluePlayerName, Boolean blueBot) {
+	public Game(String yellowPlayerName, Boolean yellowBot, String greenPlayerName, Boolean greenBot, String redPlayerName, Boolean redBot, String bluePlayerName, Boolean blueBot) throws Exception {
 		super();
 		
 		this.fieldFigurePosition = new Figure[40];
@@ -125,6 +129,14 @@ public class Game implements Observable, Observer, Serializable{
 			System.out.println(bluePlayerName + ": spielt als Blauer Spieler mit.");
 			this.createFigure(players.get(players.indexOf(bluePlayer)));
 		}
+		for(int i = 0; i<players.size()-1;i++) {
+			for(int j = i+1; j <players.size(); j++) {
+				if(players.get(i).getName().equals(players.get(j).getName())) {
+					Controller.getInstance().getFrame().getMainContent().getBoardPanel().resetBoard();
+					throw new Exception("Spiel kann nicht gestartet werden. Zwei Spieler sind gleich.");
+				}
+			}
+		}
 		
 		System.out.println("Alle Spieler erstellt: " + this.players + "\n");
 		round = 0;
@@ -161,13 +173,12 @@ public class Game implements Observable, Observer, Serializable{
 	}
 	
 //next Player
-	private void nextPlayer() {
+	public void nextPlayer() {
 		this.currentPlayer.blockFigure();
 		
 		if(this.players.indexOf(this.currentPlayer) < this.players.size() -1) {
 			this.currentPlayer=this.players.get(this.players.indexOf(this.currentPlayer) +1);
 		} else {
-			System.out.println(players);
 			this.currentPlayer=this.players.get(0);
 		}
 		System.out.println("-------------" + currentPlayer.getName() + " ist dran.------------");
@@ -176,21 +187,15 @@ public class Game implements Observable, Observer, Serializable{
 	
 	private void againPlayer() {
 		this.currentPlayer.blockFigure();
-		
-		System.out.println(currentPlayer.getName() + " ist dran.");
 	}
 	
 ///checkMove
 	public void checkMove() {
 		System.out.println("Ich checke jetzt was " + currentPlayer.getName() + " machen kann.");
-		System.out.println("Geblockte Figuren vor Schleife: " + this.blockedFigure);
-		System.out.println("Figuren in Base: " + this.currentPlayer.getInBase());
 	/// Alle Figur sind in der Base		
 		 if(this.currentPlayer.baseSize() == 4){
 			if(DiceAL.getInsance().getLastRoll() != 6) {//gewürfelte Nummer ist nicht 6
-				System.out.println("Leider sind alle Figuren in der Base und du hast keine 6");
 				if(wuerfe < 3) {
-					System.out.println("Du darfst nochmal würfeln. " + wuerfe);
 					currentFigure = null;
 					this.notifyObservers();
 					
@@ -224,14 +229,12 @@ public class Game implements Observable, Observer, Serializable{
 			} 
 		 } 
 		 else {
-			 System.out.println("Test");
 	//ckecke alle Figuren
 			for(Figure figure : this.currentPlayer.getFigures()) {
 				int moveTo = 0;
 				figure.setMoveScore(1);
 			//Figure befindet sich auf Spielfeld
 				if(Arrays.asList(this.fieldFigurePosition).contains(figure)) {
-					System.out.println("Eine Figur befindet sich auf dem Spielfeld");
 				//würde ins Ziel gehen
 					if(Arrays.asList(this.fieldFigurePosition).indexOf(figure) + DiceAL.getInsance().getLastRoll() >  this.currentPlayer.getEndField() && Arrays.asList(this.fieldFigurePosition).indexOf(figure) <= this.currentPlayer.getEndField()) {//cP + W > eF && cP <= eF
 						int lastStepsOnField = this.currentPlayer.getEndField() - Arrays.asList(this.fieldFigurePosition).indexOf(figure);
@@ -270,10 +273,8 @@ public class Game implements Observable, Observer, Serializable{
 						moveTo = Arrays.asList(this.fieldFigurePosition).indexOf(figure) + DiceAL.getInsance().getLastRoll();
 						if(moveTo>39) moveTo = moveTo - 40;
 						if(this.fieldFigurePosition[moveTo] != null){//Figure on the Field
-							System.out.println("+++++++++++++DA IST EINE FIGURE++++++++++++++++++++");
 							System.out.println(currentPlayer.getColor() + " kickt " + this.fieldFigurePosition[moveTo].getColor());
 							if(this.fieldFigurePosition[moveTo].getColor() == this.currentPlayer.getColor()) {
-								System.out.println("IST SOGAR VON DIR");
 								this.blockedFigure.add(figure);//cant go to own field	
 								continue;
 							}
@@ -297,12 +298,7 @@ public class Game implements Observable, Observer, Serializable{
 				}
 			//Figure befindet sich in Home			
 				else if (Arrays.asList(this.currentPlayer.getInHome()).contains(figure)) {
-					System.out.println("Eine Figur befindet sich in Home");
 					moveTo = Arrays.asList(this.currentPlayer.getInHome()).indexOf(figure) + DiceAL.getInsance().getLastRoll();
-					
-					System.out.println("Current Position: "+ Arrays.asList(this.currentPlayer.getInHome()).indexOf(figure));
-					System.out.println("Würfel " + DiceAL.getInsance().getLastRoll());
-					System.out.println("MoveTo in Check:" + moveTo);
 					
 					if(moveTo > 3) {
 						this.blockedFigure.add(figure);//cant go to far in home
@@ -329,7 +325,6 @@ public class Game implements Observable, Observer, Serializable{
 				}	
 			//Figure befindet sich in Base			
 				else if(Arrays.asList(this.currentPlayer.getInBase()).contains(figure)) {
-					System.out.println("Eine Figure befindet sich in der Base");
 					if(DiceAL.getInsance().getLastRoll() != 6) {
 						this.blockedFigure.add(figure);
 						continue;
@@ -349,7 +344,6 @@ public class Game implements Observable, Observer, Serializable{
 			
 			///nothing can move
 			if(this.blockedFigure.size()==4) {
-				System.out.println("Keine Figur kann laufen");
 				currentFigure = null;
 				
 				//NextPlayerOrAgain
@@ -378,11 +372,7 @@ public class Game implements Observable, Observer, Serializable{
 				if(this.currentPlayer.isBot()) {// Bot würfelt selber
 					this.botDice();
 				}
-			} else {
-			
-				System.out.println("");
-				System.out.println("Geblockte Figuren nach Schleife: " + this.blockedFigure);
-				
+			} else {				
 				for(Figure figure : currentPlayer.getFigures()) {
 					if(!blockedFigure.contains(figure)) {
 						currentPlayer.activateFigures(figure);
@@ -413,7 +403,7 @@ public class Game implements Observable, Observer, Serializable{
 		
 		
 	/// Figure steht auf dem Spielfeld		
-		else if(Arrays.asList(this.fieldFigurePosition).contains(this.currentFigure)) { System.out.println("Figure ist auf dem Feld");
+		else if(Arrays.asList(this.fieldFigurePosition).contains(this.currentFigure)) {
 		//Figure geht ins Haus
 			if(Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure) + DiceAL.getInsance().getLastRoll() >  this.currentPlayer.getEndField() && Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure) <= this.currentPlayer.getEndField()) {//cP + W > eF && cP <= eF
 				
@@ -444,7 +434,7 @@ public class Game implements Observable, Observer, Serializable{
 			} 
 		}
 	/// Figur ist in der Base
-		else if(Arrays.asList(this.currentPlayer.getInBase()).contains(this.currentFigure)) {System.out.println("Figure ist aquf dem Base");
+		else if(Arrays.asList(this.currentPlayer.getInBase()).contains(this.currentFigure)) {
 			moveTo = this.currentPlayer.getStartField();
 			
 			//befindet sich da eine Figure
@@ -463,10 +453,6 @@ public class Game implements Observable, Observer, Serializable{
 		else if (Arrays.asList(this.currentPlayer.getInHome()).contains(this.currentFigure)) { 			
 			moveTo = Arrays.asList(this.currentPlayer.getInHome()).indexOf(this.currentFigure) + DiceAL.getInsance().getLastRoll();
 			
-			System.out.println(Arrays.asList(this.currentPlayer.getInHome()).indexOf(this.currentFigure));
-			System.out.println(DiceAL.getInsance().getLastRoll());
-			System.out.println(moveTo);
-			
 			//speichern das Figure gerückt ist
 			this.lastPosition = Arrays.asList(this.currentPlayer.getInHome()).indexOf(this.currentFigure);
 			this.lastArea = currentFigure.getArea();
@@ -479,7 +465,7 @@ public class Game implements Observable, Observer, Serializable{
 			System.out.println("Fehler Figur ist nirgends gespeichert");
 		}
 		
-		//GewonnenOrNot
+	//Gewonnen
 		if(currentPlayer.homeSize() == 4) {
 			this.currentFigure.setPosition(moveTo);
 			this.currentPlayer.blockFigure();
@@ -490,7 +476,7 @@ public class Game implements Observable, Observer, Serializable{
 			
 			String winText = currentPlayer.getName() + " hat das Spiel gewonnen.";
 			
-			Object[] options = {"Neues Spiel", "OK COOL"};
+			Object[] optionsWin = {"Neues Spiel", "OK COOL"};
 			
 			int btnPressed = JOptionPane.showOptionDialog(
 					Controller.getInstance().getFrame() ,
@@ -499,13 +485,56 @@ public class Game implements Observable, Observer, Serializable{
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.INFORMATION_MESSAGE,
 					new ImageIcon("ressources/MADLogoTran.png"),
-					options, 
-					options[0]);
-			if(btnPressed == 1) {
-				System.out.println("Ich mache nichts");
+					optionsWin, 
+					optionsWin[0]);
+			
+			if(btnPressed == 0){
+				JTextField nameOne = new JTextField("             ");
+            	nameOne.addFocusListener(new EmptyFL());
+            	JTextField nameTwo = new JTextField("             ");
+            	nameTwo.addFocusListener(new EmptyFL());
+            	JTextField nameThree = new JTextField("             ");
+            	nameThree.addFocusListener(new EmptyFL());
+            	JTextField nameFour = new JTextField("             ");
+            	nameFour.addFocusListener(new EmptyFL());
+            	
+            	JCheckBox checkOne = new JCheckBox("Bot");
+            	JCheckBox checkTwo = new JCheckBox("Bot");
+            	JCheckBox checkThree = new JCheckBox("Bot");
+            	JCheckBox checkFour = new JCheckBox("Bot");
+            	Object[] optionsNew = {nameOne, checkOne, nameTwo, checkTwo, nameThree, checkThree, nameFour, checkFour, "Start Spiel"};
+            	JOptionPane.showOptionDialog(
+        	 			Controller.getInstance().getFrame(),
+                     	"Gib die Spieler an, welche mitspielen.\n  Gelb                       Grün                        Rot                         Blau", 
+                     	"Player",            
+                     	JOptionPane.OK_CANCEL_OPTION,
+                     	JOptionPane.PLAIN_MESSAGE,
+                     	null,//new ImageIcon("ressources/index.png")         
+                     	optionsNew, 
+                     	optionsNew[0]
+        			 );
+            	
+            	int players = 4;
+            	if(nameOne.getText().isBlank() && !checkOne.isSelected()) {
+            		players--;
+            	}
+            	if(nameTwo.getText().isBlank() && !checkTwo.isSelected()) {
+            		players--;
+            	}
+            	if(nameThree.getText().isBlank() && !checkThree.isSelected()) {
+            		players--;
+            	}
+            	if(nameFour.getText().isBlank() && !checkFour.isSelected()) {
+            		players--;
+            	}
+            	if(players < 2) {
+            		System.out.println("Zu wenig Spieler");
+            	}
+            	else {
+            	 	DiceAL.getInsance().removeObsever((Observer)Controller.getInstance().getCurrentGame());
+                    Controller.getInstance().newGame(nameOne.getText(), checkOne.isSelected(), nameTwo.getText(), checkTwo.isSelected(),nameThree.getText(),checkThree.isSelected(), nameFour.getText(),checkFour.isSelected());
+            	} 
 			}
-
-			System.out.println(currentPlayer.getName() + " hat gewonnen!");
 			return;
 		}
 		else {
@@ -540,7 +569,6 @@ public class Game implements Observable, Observer, Serializable{
 				}
 			}
 		}
-		System.out.println("rdmMoveFigure Größe: "+ rdmMoveFigure.size());
 		this.moveFigure(rdmMoveFigure.get(random.nextInt(rdmMoveFigure.size())));
 	}
 	
@@ -555,7 +583,6 @@ public class Game implements Observable, Observer, Serializable{
 	
 //Kick Player
 	private void kickFigure(int moveTo) {
-		System.out.println("Kicke Figure");
 		int kickTo = 0;
 		this.toKickFigure = this.fieldFigurePosition[moveTo];
 		
@@ -584,7 +611,6 @@ public class Game implements Observable, Observer, Serializable{
 	public void update(Observable observable, Object object) {
 
 		if(object instanceof Integer lastRoll) {
-			System.out.println(this.currentPlayer.getName() + " hat eine " + lastRoll + " gewürfelt");
 			dices.add(lastRoll);
 			wuerfe = wuerfe + 1;
 		}
