@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -15,12 +17,13 @@ import javax.swing.JOptionPane;
 
 import de.spe.control.BotThread;
 import de.spe.control.Controller;
+import de.spe.control.DatabaseConnector;
 import de.spe.control.DiceAL;
 import de.spe.control.Observable;
 import de.spe.control.Observer;
 import de.spe.view.BoardPanel;
 
-public class Game implements Observable, Observer, Serializable{
+public class Game implements Observable, Observer, Saveable{
 
 /*****Attribute*****/
 	private Player currentPlayer;
@@ -43,6 +46,8 @@ public class Game implements Observable, Observer, Serializable{
 	private boolean canMove;
 	Random random;
 	BotThread botRun;
+
+	private int lastID;
 	
 
 /*****GetterAndSetter*****/
@@ -60,6 +65,15 @@ public class Game implements Observable, Observer, Serializable{
 	}
 	public Area getLastArea() {
 		return this.lastArea;
+	}
+	public int getLastID()
+	{
+		return lastID;
+	}
+
+	public List<Figure> getBlockedFigures()
+	{
+		return blockedFigure;
 	}
 
 /*****Constructor*****/
@@ -104,7 +118,7 @@ public class Game implements Observable, Observer, Serializable{
 			}
 			Player greenPlayer = new Player(greenPlayerName, Colors.Green, Colors.GreenBlock, greenBot);
 			this.players.add(greenPlayer);
-			System.out.println(greenPlayerName + ": spielt als Grüner Spieler mit.");
+			System.out.println(greenPlayerName + ": spielt als Grï¿½ner Spieler mit.");
 			this.createFigure(players.get(players.indexOf(greenPlayer)));
 		}
 		if(!redPlayerName.isBlank() || redBot == true) {
@@ -135,13 +149,15 @@ public class Game implements Observable, Observer, Serializable{
 		if(currentPlayer.isBot() == true) {
 			this.botDice();
 		}
+
+		lastID = -1;
 	}
 
 /*****Methoden*****/	
 	
 ///createFigures
 	private void createFigure(Player player) {
-		System.out.println("Ich platziere die Figuren für " + player.getName() + ".\n");
+		System.out.println("Ich platziere die Figuren fï¿½r " + player.getName() + ".\n");
 		for(Figure figure : player.getFigures()) {
 			this.currentFigure = figure;
 			notifyObservers();
@@ -187,14 +203,14 @@ public class Game implements Observable, Observer, Serializable{
 		System.out.println("Figuren in Base: " + this.currentPlayer.getInBase());
 	/// Alle Figur sind in der Base		
 		 if(this.currentPlayer.baseSize() == 4){
-			if(DiceAL.getInsance().getLastRoll() != 6) {//gewürfelte Nummer ist nicht 6
+			if(DiceAL.getInsance().getLastRoll() != 6) {//gewï¿½rfelte Nummer ist nicht 6
 				System.out.println("Leider sind alle Figuren in der Base und du hast keine 6");
 				if(wuerfe < 3) {
-					System.out.println("Du darfst nochmal würfeln. " + wuerfe);
+					System.out.println("Du darfst nochmal wï¿½rfeln. " + wuerfe);
 					currentFigure = null;
 					this.notifyObservers();
 					
-					if(this.currentPlayer.isBot()) {// Bot würfelt selber
+					if(this.currentPlayer.isBot()) {// Bot wï¿½rfelt selber
 						this.botDice();
 					}
 				}else {					
@@ -232,7 +248,7 @@ public class Game implements Observable, Observer, Serializable{
 			//Figure befindet sich auf Spielfeld
 				if(Arrays.asList(this.fieldFigurePosition).contains(figure)) {
 					System.out.println("Eine Figur befindet sich auf dem Spielfeld");
-				//würde ins Ziel gehen
+				//wï¿½rde ins Ziel gehen
 					if(Arrays.asList(this.fieldFigurePosition).indexOf(figure) + DiceAL.getInsance().getLastRoll() >  this.currentPlayer.getEndField() && Arrays.asList(this.fieldFigurePosition).indexOf(figure) <= this.currentPlayer.getEndField()) {//cP + W > eF && cP <= eF
 						int lastStepsOnField = this.currentPlayer.getEndField() - Arrays.asList(this.fieldFigurePosition).indexOf(figure);
 						
@@ -265,7 +281,7 @@ public class Game implements Observable, Observer, Serializable{
 					
 						
 					
-				//würde sich auf Spielfeld bewegen
+				//wï¿½rde sich auf Spielfeld bewegen
 					else{
 						moveTo = Arrays.asList(this.fieldFigurePosition).indexOf(figure) + DiceAL.getInsance().getLastRoll();
 						if(moveTo>39) moveTo = moveTo - 40;
@@ -301,7 +317,7 @@ public class Game implements Observable, Observer, Serializable{
 					moveTo = Arrays.asList(this.currentPlayer.getInHome()).indexOf(figure) + DiceAL.getInsance().getLastRoll();
 					
 					System.out.println("Current Position: "+ Arrays.asList(this.currentPlayer.getInHome()).indexOf(figure));
-					System.out.println("Würfel " + DiceAL.getInsance().getLastRoll());
+					System.out.println("Wï¿½rfel " + DiceAL.getInsance().getLastRoll());
 					System.out.println("MoveTo in Check:" + moveTo);
 					
 					if(moveTo > 3) {
@@ -375,7 +391,7 @@ public class Game implements Observable, Observer, Serializable{
 				this.canMove = false;
 				this.notifyObservers();
 				
-				if(this.currentPlayer.isBot()) {// Bot würfelt selber
+				if(this.currentPlayer.isBot()) {// Bot wï¿½rfelt selber
 					this.botDice();
 				}
 			} else {
@@ -420,7 +436,7 @@ public class Game implements Observable, Observer, Serializable{
 				int lastStepsOnField = this.currentPlayer.getEndField() - Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure);
 				moveTo = DiceAL.getInsance().getLastRoll() - lastStepsOnField -1;
 				
-				//speichern das Figure gerückt ist
+				//speichern das Figure gerï¿½ckt ist
 				this.lastPosition = Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure);
 				this.lastArea = currentFigure.getArea();
 				this.fieldFigurePosition[Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure)] = null;
@@ -435,7 +451,7 @@ public class Game implements Observable, Observer, Serializable{
 				if(this.fieldFigurePosition[moveTo] != null){
 					this.kickFigure(moveTo); //zu kickende Figur
 				}
-				//speichern das Figure gerückt ist
+				//speichern das Figure gerï¿½ckt ist
 				this.lastPosition = Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure);
 				this.lastArea = currentFigure.getArea();
 				this.fieldFigurePosition[Arrays.asList(this.fieldFigurePosition).indexOf(this.currentFigure)] = null;
@@ -452,7 +468,7 @@ public class Game implements Observable, Observer, Serializable{
 				this.kickFigure(moveTo);
 			}
 
-			//speichern das Figure gerückt ist
+			//speichern das Figure gerï¿½ckt ist
 			this.lastPosition = Arrays.asList(this.currentPlayer.getInBase()).indexOf(this.currentFigure);
 			this.lastArea = currentFigure.getArea();
 			this.currentPlayer.getInBase()[Arrays.asList(this.currentPlayer.getInBase()).indexOf(this.currentFigure)] = null;
@@ -467,7 +483,7 @@ public class Game implements Observable, Observer, Serializable{
 			System.out.println(DiceAL.getInsance().getLastRoll());
 			System.out.println(moveTo);
 			
-			//speichern das Figure gerückt ist
+			//speichern das Figure gerï¿½ckt ist
 			this.lastPosition = Arrays.asList(this.currentPlayer.getInHome()).indexOf(this.currentFigure);
 			this.lastArea = currentFigure.getArea();
 			this.currentPlayer.getInHome()[Arrays.asList(this.currentPlayer.getInHome()).indexOf(this.currentFigure)] = null;
@@ -487,6 +503,23 @@ public class Game implements Observable, Observer, Serializable{
 			this.notifyObservers();
 			DiceAL.getInsance().deactivateDice(Controller.getInstance().getFrame().getMainContent().getBoardPanel().getDice());
 			canMove = false;
+
+			try {
+				this.save();
+				for(Player player : players)
+				{
+					player.save();
+					for(Figure figure : player.getFigures())
+					{
+						figure.save();
+					}
+				}
+				
+			} catch (Exception e) {
+				System.out.println("Ach, fuck dich!");
+				System.out.println(e.getMessage());
+			}
+			
 			
 			String winText = currentPlayer.getName() + " hat das Spiel gewonnen.";
 			
@@ -495,7 +528,7 @@ public class Game implements Observable, Observer, Serializable{
 			int btnPressed = JOptionPane.showOptionDialog(
 					Controller.getInstance().getFrame() ,
 					winText,
-					"Glückwunsch",
+					"Glï¿½ckwunsch",
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.INFORMATION_MESSAGE,
 					new ImageIcon("ressources/MADLogoTran.png"),
@@ -522,7 +555,7 @@ public class Game implements Observable, Observer, Serializable{
 		this.canMove = false;
 		this.notifyObservers();
 		
-		if(this.currentPlayer.isBot()) {// Bot würfelt selber
+		if(this.currentPlayer.isBot()) {// Bot wï¿½rfelt selber
 			this.botDice();
 		}
 		}
@@ -540,7 +573,7 @@ public class Game implements Observable, Observer, Serializable{
 				}
 			}
 		}
-		System.out.println("rdmMoveFigure Größe: "+ rdmMoveFigure.size());
+		System.out.println("rdmMoveFigure Grï¿½ï¿½e: "+ rdmMoveFigure.size());
 		this.moveFigure(rdmMoveFigure.get(random.nextInt(rdmMoveFigure.size())));
 	}
 	
@@ -584,7 +617,7 @@ public class Game implements Observable, Observer, Serializable{
 	public void update(Observable observable, Object object) {
 
 		if(object instanceof Integer lastRoll) {
-			System.out.println(this.currentPlayer.getName() + " hat eine " + lastRoll + " gewürfelt");
+			System.out.println(this.currentPlayer.getName() + " hat eine " + lastRoll + " gewï¿½rfelt");
 			dices.add(lastRoll);
 			wuerfe = wuerfe + 1;
 		}
@@ -607,7 +640,7 @@ public class Game implements Observable, Observer, Serializable{
 				this.notifyObservers(); 
 				this.currentPlayer.activateFigures();
 				
-				if(this.currentPlayer.isBot()) {// Bot würfelt selber
+				if(this.currentPlayer.isBot()) {// Bot wï¿½rfelt selber
 					this.botDice();
 				}
 			}
@@ -637,5 +670,9 @@ public class Game implements Observable, Observer, Serializable{
 		for (Observer observer : observers) {
 			observer.update(this, currentFigure);
 		}
+	}
+	@Override
+	public void save() throws SQLException{
+		lastID = DatabaseConnector.executeGetID("INSERT INTO t_game VALUES()");
 	}	
 }

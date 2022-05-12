@@ -1,11 +1,16 @@
 package de.spe.model;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.ResourceBundle.Control;
 
 import javax.swing.BorderFactory;
 import javax.swing.border.EtchedBorder;
 
-public class Player {
+import de.spe.control.Controller;
+import de.spe.control.DatabaseConnector;
+
+public class Player implements Saveable {
 /*****Attribute*****/
 	private String name;
 	private Colors color;
@@ -23,6 +28,8 @@ public class Player {
 	private Figure secondFigure;
 	private Figure thirdFigure;
 	private Figure fourthFigure;
+
+	int lastID;
 	
 	
 /*****GetterAndSetter*****/
@@ -72,6 +79,10 @@ public class Player {
 	public Figure getFourthFigure() {
 		return fourthFigure;
 	}
+	public int getLastID()
+	{
+		return lastID;
+	}
 	
 /*****Constructor*****/	
 	public Player(String name, Colors color, Colors blockedColor, Boolean bot) {
@@ -84,7 +95,7 @@ public class Player {
 		this.inBase = new Figure[4];
 		this.inHome = new Figure[4];
 		
-		//Für Farbe richtige Nummern
+		//Fï¿½r Farbe richtige Nummern
 		if(color==Colors.Yellow) {
 			startField = GUINumber.yellowStartPoint.getNumber();
 			endField = GUINumber.yellowEndPoint.getNumber();
@@ -103,20 +114,22 @@ public class Player {
 		}
 		
 		//create Figure	
-		this.firstFigure = new Figure(color, 0);
+		this.firstFigure = new Figure(color, 0, this);
 		this.figures.add(firstFigure);
 		this.addInBase(firstFigure);		
-		this.secondFigure = new Figure(color, 1);
+		this.secondFigure = new Figure(color, 1, this);
 		this.figures.add(secondFigure);
 		this.addInBase(secondFigure);	
-		this.thirdFigure = new Figure(color, 2);
+		this.thirdFigure = new Figure(color, 2, this);
 		this.figures.add(thirdFigure);
 		this.addInBase(thirdFigure);
-		this.fourthFigure = new Figure(color, 3);
+		this.fourthFigure = new Figure(color, 3, this);
 		this.figures.add(fourthFigure);
 		this.addInBase(fourthFigure);	
 		
 		this.blockFigure();
+
+		this.lastID = -1;
 	}
 	
 /*****Methoden*****/	
@@ -144,7 +157,7 @@ public class Player {
 		figure.setBackground(this.blockedColor.getColor());
 	}
 	
-	//Größe der Arrays
+	//Grï¿½ï¿½e der Arrays
 	public int baseSize() {
 		int count = 0;
 		for(Figure figure : this.inBase) {
@@ -170,6 +183,16 @@ public class Player {
 		return "Player:" + this.name + ", isBot: " + this.bot +"|";
 	}
 	
+	@Override
+public void save() throws SQLException{
+		Game currentGame = Controller.getInstance().getCurrentGame();
+		int lastID = -1;
+		//currentGame.save();
+		if((lastID = currentGame.getLastID()) == -1)
+			throw new SQLException("Failed to retrieve GameID");
+		
+		this.lastID = DatabaseConnector.executeGetID("INSERT INTO t_player (name, color, game_id) VALUES(" + "'" + name + "', " + "'" + color.name().toLowerCase() + "', " + lastID + ")");
+	}
 
 	
 }
