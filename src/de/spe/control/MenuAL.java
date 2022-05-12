@@ -37,7 +37,7 @@ public class MenuAL implements ActionListener{
 	                	JCheckBox checkThree = new JCheckBox("Bot");
 	                	JCheckBox checkFour = new JCheckBox("Bot");
 	                	Object[] options = {nameOne, checkOne, nameTwo, checkTwo, nameThree, checkThree, nameFour, checkFour, "Start Spiel"};
-	                	JOptionPane.showOptionDialog(
+	                	int start = JOptionPane.showOptionDialog(
 	            	 			Controller.getInstance().getFrame(),
 	                         	"Gib die Spieler an, welche mitspielen.\n  Gelb                       Grün                        Rot                         Blau", 
 	                         	"Player",            
@@ -47,27 +47,29 @@ public class MenuAL implements ActionListener{
 	                         	options, 
 	                         	options[0]
 	            			 );
+	                	if(start == 8) {
+	                		int players = 4;
+		                	if(nameOne.getText().isBlank() && !checkOne.isSelected()) {
+		                		players--;
+		                	}
+		                	if(nameTwo.getText().isBlank() && !checkTwo.isSelected()) {
+		                		players--;
+		                	}
+		                	if(nameThree.getText().isBlank() && !checkThree.isSelected()) {
+		                		players--;
+		                	}
+		                	if(nameFour.getText().isBlank() && !checkFour.isSelected()) {
+		                		players--;
+		                	}
+		                	if(players < 2) {
+		                		System.out.println("Zu wenig Spieler");
+		                	}
+		                	else {
+		                	 	DiceAL.getInsance().removeObsever((Observer)Controller.getInstance().getCurrentGame());
+			                    Controller.getInstance().newGame(nameOne.getText(), checkOne.isSelected(), nameTwo.getText(), checkTwo.isSelected(),nameThree.getText(),checkThree.isSelected(), nameFour.getText(),checkFour.isSelected());
+		                	} 
+	                	}
 	                	
-	                	int players = 4;
-	                	if(nameOne.getText().isBlank() && !checkOne.isSelected()) {
-	                		players--;
-	                	}
-	                	if(nameTwo.getText().isBlank() && !checkTwo.isSelected()) {
-	                		players--;
-	                	}
-	                	if(nameThree.getText().isBlank() && !checkThree.isSelected()) {
-	                		players--;
-	                	}
-	                	if(nameFour.getText().isBlank() && !checkFour.isSelected()) {
-	                		players--;
-	                	}
-	                	if(players < 2) {
-	                		System.out.println("Zu wenig Spieler");
-	                	}
-	                	else {
-	                	 	DiceAL.getInsance().removeObsever((Observer)Controller.getInstance().getCurrentGame());
-		                    Controller.getInstance().newGame(nameOne.getText(), checkOne.isSelected(), nameTwo.getText(), checkTwo.isSelected(),nameThree.getText(),checkThree.isSelected(), nameFour.getText(),checkFour.isSelected());
-	                	} 
 	                break;
 	                case "Bot Zeit":
 	                	Object[] optionsBotTime = {"0,01 Sekunden", "0,1 Sekunden", "1 Sekunde",  "1,5 Sekunde", "2 Sekunden"};

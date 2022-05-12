@@ -201,7 +201,6 @@ public class Game implements Observable, Observer, Saveable{
 	
 ///checkMove
 	public void checkMove() {
-		System.out.println("Ich checke jetzt was " + currentPlayer.getName() + " machen kann.");
 	/// Alle Figur sind in der Base		
 		 if(this.currentPlayer.baseSize() == 4){
 			if(DiceAL.getInsance().getLastRoll() != 6) {//gewürfelte Nummer ist nicht 6
@@ -284,7 +283,6 @@ public class Game implements Observable, Observer, Saveable{
 						moveTo = Arrays.asList(this.fieldFigurePosition).indexOf(figure) + DiceAL.getInsance().getLastRoll();
 						if(moveTo>39) moveTo = moveTo - 40;
 						if(this.fieldFigurePosition[moveTo] != null){//Figure on the Field
-							System.out.println(currentPlayer.getColor() + " kickt " + this.fieldFigurePosition[moveTo].getColor());
 							if(this.fieldFigurePosition[moveTo].getColor() == this.currentPlayer.getColor()) {
 								this.blockedFigure.add(figure);//cant go to own field	
 								continue;
