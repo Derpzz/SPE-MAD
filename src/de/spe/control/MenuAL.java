@@ -81,23 +81,25 @@ public class MenuAL implements ActionListener{
         	                    optionsBotTime[0]);
 
 	                	System.out.println(botTimeString);
-	                	switch(botTimeString) {
-	                	case "0,01 Sekunden":
-	                		Controller.getInstance().setBotTime(10);
-	                	break;
-	                	case "0,1 Sekunden":
-	                		Controller.getInstance().setBotTime(100);
-	                	break;
-	                	case "1 Sekunde":
-	                		Controller.getInstance().setBotTime(1000);
-	                	break;
-	                	case "1,5 Sekunden":
-	                		Controller.getInstance().setBotTime(1500);
-	                	break;
-	                	case "2 Sekunden":
-	                		Controller.getInstance().setBotTime(2000);
-	                	break;
+	                	if(botTimeString != null) {
+	                		switch(botTimeString) {
+		                	case "0,01 Sekunden":
+		                		Controller.getInstance().setBotTime(10);
+		                	break;
+		                	case "0,1 Sekunden":
+		                		Controller.getInstance().setBotTime(100);
+		                	break;
+		                	case "1 Sekunde":
+		                		Controller.getInstance().setBotTime(1000);
+		                	break;
+		                	case "1,5 Sekunden":
+		                		Controller.getInstance().setBotTime(1500);
+		                	break;
+		                	case "2 Sekunden":
+		                		Controller.getInstance().setBotTime(2000);
+		                	break;
 	                	}
+	                }
 	                break;	
 	                case "Spielregeln":
 	                	Object[] objectRule = {"Verstanden"};
@@ -146,7 +148,7 @@ public class MenuAL implements ActionListener{
 	                         	"Credits",            
 	                         	JOptionPane.OK_CANCEL_OPTION,
 	                         	JOptionPane.PLAIN_MESSAGE,
-	        					new ImageIcon("ressources/MADLogoTran.png"),        
+	        					new ImageIcon("ressources/MADLogoSmall.png"),        
 	                         	objectCredit, 
 	                         	objectCredit[0]
 	            			 );

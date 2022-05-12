@@ -484,7 +484,7 @@ public class Game implements Observable, Observer{
 					"Glückwunsch",
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.INFORMATION_MESSAGE,
-					new ImageIcon("ressources/MADLogoTran.png"),
+					new ImageIcon("ressources/MADLogoSmall.png"),
 					optionsWin, 
 					optionsWin[0]);
 			

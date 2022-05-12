@@ -18,7 +18,7 @@ public class MainMadFrame extends JFrame{
 		this.setContentPane(mainContent);
 		
 		
-		ImageIcon icon = new ImageIcon("ressources/MADLogoTran.png");
+		ImageIcon icon = new ImageIcon("ressources/MADLogoSmall.png");
 		this.setIconImage(icon.getImage());
 		
 		new MenuBar(this);
